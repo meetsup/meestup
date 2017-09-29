@@ -1,0 +1,60 @@
+<style lang="less">
+  page{
+    background-color: #CCCCCC;
+  }
+  .discoveryPage{
+    .discoveryItem{
+      background-color: #ffffff;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+    .avatar{
+      width: 80rpx;
+      height: 80rpx;
+      border-radius: 50%;
+    }
+    .name{
+
+    }
+  }
+</style>
+<template>
+  <view class="discoveryPage">
+    <view class="discoveryItem">
+      <image class="avatar" mode="aspectFill" src="{{imageSrc}}"></image>
+      <view class="name">
+        黎耀辉
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Discovery extends wepy.page {
+    config = {
+      navigationBarTitleText: '发现'
+    }
+    components = {
+    }
+
+    data = {
+      imageSrc:'http://www.1tong.com/uploads/wallpaper/distinct/222-3-1920x1200.jpg'
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+    }
+
+    events = {
+    }
+
+    onLoad() {
+    }
+  }
+</script>
