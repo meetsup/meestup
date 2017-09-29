@@ -1,8 +1,105 @@
 <style lang="less">
+  page{
+    background-color: #F2F2F2;
+  }
+  .indexPage{
+    .flexSetting(@direction:row, @alignItem:center, @justify: flex-start) {
+      display: flex;
+      flex-direction: @direction;
+      align-items: @alignItem;
+      justify-content: @justify;
+    }
+    .header{
+      .flexSetting(row,center,space-between);
+      background-color: #ffffff;
+      padding:20rpx;
+    }
+    .city{
+      font-size: 28rpx;
+    }
+    .icon_up {
+      margin: -12rpx 15rpx 0 15rpx;
+      width: 17rpx;
+      height: 17rpx;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      border: 1rpx solid #c7c7cc;
+      border-top-width: 0;
+      border-right-width: 0;
+    }
+    .inputView{
+      width: 460rpx;
+      height: 50rpx;
+      background-color: #F2F2F2;
+      border-radius: 50rpx;
+      padding: 8rpx 20rpx;
+      .flexSetting();
+    }
+    .searchIcon{
+      height: 45rpx;
+      width: 45rpx;
+    }
+    .searchText{
+      font-size: 28rpx;
+      color: #808080;
+      line-height: 50rpx;
+    }
+    .search{
+      background-color: #F2F2F2;
+      border-radius: 50rpx;
+    }
+    .message{
+      margin-left: 15rpx;
+      height: 50rpx;
+      width: 50rpx;
+    }
+    .slideImage{
+      width: 100%;
+    }
+    .types{
+      .flexSetting(row,center,space-around);
+      flex-wrap:wrap;
+      padding:10rpx 20rpx;
+    }
+    .typeItem{
+      width: 120rpx;
+      height: 50rpx;
+      background-color: #0BB20C;
+      border-radius: 60rpx;
+      color:#ffffff;
+      font-size: 30rpx;
+      margin: 10rpx 20rpx;
+      .flexSetting(row,center,center);
+    }
+  }
 </style>
 <template>
-  <view class="container">
-    日记
+  <view class="indexPage">
+    <view class="header">
+      <text class="city">上海市</text>
+      <view class="icon_up"></view>
+      <!--<input class="search" maxlength="10" placeholder="" />-->
+      <view class="inputView">
+        <image class="searchIcon" src="../images/search.png"></image>
+        <text class="searchText">请输入进行搜索</text>
+      </view>
+      <image class="message" src="../images/message_64.png"></image>
+    </view>
+    <view>
+      <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}"
+              duration="{{duration}}" circular="{{circular}}">
+        <block wx:for="{{imgUrls}}">
+          <swiper-item catchtap="imageTap">
+            <image src="{{item}}" class="slideImage" height="150"/>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+    <view class="types">
+      <block wx:for="{{types}}">
+        <view class="typeItem" style="{{'background-color:'+item.color}}">{{item.text}}</view>
+      </block>
+    </view>
   </view>
 </template>
 
@@ -11,18 +108,70 @@ import wepy from 'wepy'
 
 export default class Index extends wepy.page {
   config = {
-    navigationBarTitleText: '日记'
+    navigationBarTitleText: 'Meets Up'
   }
   components = {
   }
 
   data = {
+    imgUrls: [
+      'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+      'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
+      'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
+    ],
+    indicatorDots: true,
+    autoplay: true,
+    interval: 5000,
+    duration: 1000,
+    circular:true,
+    types: [
+      {
+        text:'Java',
+        color:'#CCCC66'
+      },{
+        text:'JS',
+        color:'#CC6600'
+      },{
+        text:'SQL',
+        color:'#CC3333'
+      },{
+        text:'C',
+        color:'#996633'
+      },{
+        text:'C++',
+        color:'#996666'
+      },{
+        text:'C#',
+        color:'#993399'
+      },{
+        text:'Python',
+        color:'#993366'
+      },{
+        text:'PHP',
+        color:'#990000'
+      },{
+        text:'Swift',
+        color:'#990066'
+      },{
+        text:'Go',
+        color:'#669933'
+      },{
+        text:'汇编',
+        color:'#669900'
+      },{
+        text:'OC',
+        color:'#660033'
+      }
+    ]
   }
 
   computed = {
   }
 
   methods = {
+    imageTap(e){
+      console.log(e);
+    }
   }
 
   events = {
