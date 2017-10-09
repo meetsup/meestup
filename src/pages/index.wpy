@@ -95,11 +95,6 @@
         </block>
       </swiper>
     </view>
-    <view class="types">
-      <block wx:for="{{types}}">
-        <view class="typeItem" style="{{'background-color:'+item.color}}">{{item.text}}</view>
-      </block>
-    </view>
   </view>
 </template>
 

@@ -1,31 +1,65 @@
 <style lang="less">
   page{
-    background-color: #CCCCCC;
+    background-color: #F2F2F2;
   }
   .discoveryPage{
-    .discoveryItem{
-      background-color: #ffffff;
-      width: 100%;
+    .flexSetting(@direction:row, @alignItem:center, @justify: flex-start) {
       display: flex;
-      align-items: center;
+      flex-direction: @direction;
+      align-items: @alignItem;
+      justify-content: @justify;
     }
-    .avatar{
-      width: 80rpx;
-      height: 80rpx;
-      border-radius: 50%;
+    .types{
+      padding:10rpx 20rpx;
+      margin-bottom: 10rpx;
     }
-    .name{
+    .typeItem{
 
+    }
+    .typeTitle{
+      .flexSetting(row,center,flex-start);
+      font-size: 32rpx;
+      margin: 20rpx 0 10rpx 0;
+    }
+    .typeTitleIcon{
+      height: 38rpx;
+      width: 8rpx;
+      background-color: rgba(21, 101, 192, 1);;
+      margin-right: 10rpx;
+    }
+    .typeContent{
+      .flexSetting(row,center,flex-start);
+      flex-wrap: wrap;
+    }
+    .typeContentItem{
+      .flexSetting(row,center,center);
+      box-sizing: border-box;
+      padding: 10rpx;
+      width: 174.5rpx;
+      height: 60rpx;
+      background-color: #ffffff;
+      margin-right: 4rpx;
+      margin-bottom: 4rpx;
+      font-size: 30rpx;
+    }
+    .typeContentItem:nth-child(4n){
+      margin-right: 0rpx;
     }
   }
 </style>
 <template>
   <view class="discoveryPage">
-    <view class="discoveryItem">
-      <image class="avatar" mode="aspectFill" src="{{imageSrc}}"></image>
-      <view class="name">
-        黎耀辉
-      </view>
+    <view class="types">
+      <block wx:for="{{types}}">
+        <view class="typeItem">
+          <view class="typeTitle"><view class="typeTitleIcon"></view><text>{{item.title}}</text></view>
+          <view class="typeContent">
+            <block wx:for="{{item.content}}" wx:for-index="idx" wx:for-item="itemName">
+              <view class="typeContentItem">{{itemName}}</view>
+            </block>
+          </view>
+        </view>
+      </block>
     </view>
   </view>
 </template>
@@ -35,17 +69,20 @@
 
   export default class Discovery extends wepy.page {
     config = {
-      navigationBarTitleText: '发现'
+      navigationBarTitleText: '发现-分类'
     }
     components = {
     }
-
     data = {
-      imageSrc:'http://www.1tong.com/uploads/wallpaper/distinct/222-3-1920x1200.jpg'
+      imageSrc:'http://www.1tong.com/uploads/wallpaper/distinct/222-3-1920x1200.jpg',
+      types: [
+        {title:'互联网',content:['Java', 'JavaScript','SQL','C','C++','C#','Python','PHP','云计算','物联网','游戏']},
+        {title:'金融',content:['理财','股票','基金']},
+        {title:'娱乐休闲',content:['旅行','运动','生活']}
+      ]
     }
 
     computed = {
-
     }
 
     methods = {
