@@ -86,18 +86,45 @@
       margin-right: 10rpx;
     }
     .listItem{
-
+      padding:20rpx;
+      background-color: #ffffff;
+      margin-bottom: 10rpx;
+      .flexSetting(row,flex-start,flex-start);
     }
-    .avatar{
+    .listItemImg{
+      height: 220rpx;
+      width: 500rpx;
+    }
+    .listItemContent{
+      margin-left: 20rpx;
+      height: 220rpx;
+      .flexSetting(column,flex-start,space-between);
+    }
+    .eye{
+      width: 32rpx;
+      height: 32rpx;
+    }
+    .line1{
+      width: 100%;
       .flexSetting(row,center,flex-start);
     }
-    .avatarImg{
-      width: 80rpx;
-      height: 80rpx;
-      border-radius: 50%;
+    .timeCity{
+      width: 100%;
+      font-size: 30rpx;
+      color: #bfbfbf;
+      line-height: 32rpx;
+      .flexSetting(row,center,space-between);
     }
-    .avatarName{
-
+    .line3{
+      width:100%;
+      color: red;
+      .flexSetting(row,center,space-between);
+    }
+    .line31{
+      font-size: 30rpx;
+      color: #bfbfbf;
+      line-height: 32rpx;
+      .flexSetting(row,center,flex-start);
     }
   }
 </style>
@@ -126,11 +153,49 @@
     <view class="indexBody">
       <view class="bodyTitle"><view class="titleIcon"></view><text>热门推荐</text></view>
       <view class="listItem">
-        <view class="avatar">
-          <image class="avatarImg" src="http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg"></image>
-          <text class="avatarName">途虎养车</text>
+        <image class="listItemImg" src="{{src}}"></image>
+        <view class="listItemContent">
+          <view class="line1">
+            <text>2017年 10月途虎养车员工内部福利申请活动</text>
+          </view>
+          <view class="timeCity">
+            <text>2017-10-17</text><text>上海</text>
+          </view>
+          <view class="line3">
+            <view class="line31"><image class="eye" src="../images/eye.png"></image><text>10081</text></view>
+            <text>免费</text>
+          </view>
         </view>
-        <view>免费活动</view>
+      </view>
+      <view class="listItem">
+        <image class="listItemImg" src="{{src}}"></image>
+        <view class="listItemContent">
+          <view class="line1">
+            <text>2017年 10月途虎养车员工内部福利申请活动</text>
+          </view>
+          <view class="timeCity">
+            <text>2017-10-17</text><text>上海</text>
+          </view>
+          <view class="line3">
+            <view class="line31"><image class="eye" src="../images/eye.png"></image><text>10081</text></view>
+            <text>免费</text>
+          </view>
+        </view>
+      </view>
+      <view class="listItem">
+        <image class="listItemImg" src="{{src}}"></image>
+        <view class="listItemContent">
+          <view class="line1">
+            <text>2017年 10月途虎养车员工内部福利申请活动</text>
+          </view>
+          <view class="timeCity">
+            <text>2017-10-17</text><text>上海</text>
+          </view>
+          <view class="line3">
+            <view class="line31"><image class="eye" src="../images/eye.png"></image><text>10081</text></view>
+            <text>免费</text>
+          </view>
+        </view>
       </view>
     </view>
   </view>
@@ -157,45 +222,7 @@ export default class Index extends wepy.page {
     interval: 5000,
     duration: 1000,
     circular:true,
-    types: [
-      {
-        text:'Java',
-        color:'#CCCC66'
-      },{
-        text:'JS',
-        color:'#CC6600'
-      },{
-        text:'SQL',
-        color:'#CC3333'
-      },{
-        text:'C',
-        color:'#996633'
-      },{
-        text:'C++',
-        color:'#996666'
-      },{
-        text:'C#',
-        color:'#993399'
-      },{
-        text:'Python',
-        color:'#993366'
-      },{
-        text:'PHP',
-        color:'#990000'
-      },{
-        text:'Swift',
-        color:'#990066'
-      },{
-        text:'Go',
-        color:'#669933'
-      },{
-        text:'汇编',
-        color:'#669900'
-      },{
-        text:'OC',
-        color:'#660033'
-      }
-    ]
+    src: 'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
   }
 
   computed = {
