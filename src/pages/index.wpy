@@ -82,7 +82,7 @@
     .titleIcon{
       height: 38rpx;
       width: 8rpx;
-      background-color: rgba(21, 101, 192, 1);;
+      background-color: #990000;
       margin-right: 10rpx;
     }
     .listItem{
@@ -117,7 +117,7 @@
     }
     .line3{
       width:100%;
-      color: red;
+      color: #a2313e;
       .flexSetting(row,center,space-between);
     }
     .line31{
