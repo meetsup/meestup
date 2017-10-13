@@ -10,8 +10,10 @@
     config = {
       pages: [
         'pages/index',
-        'pages/me',
-        'pages/discovery'
+        'pages/discovery',
+        'pages/new',
+        'pages/message',
+        'pages/me'
       ],
       window: {
         backgroundTextStyle: 'light',
@@ -35,12 +37,12 @@
           "selectedIconPath": "images/type (1).png",
           "text": "分类"
         }, {
-          "pagePath": "pages/me",
+          "pagePath": "pages/new",
           "iconPath": "images/add.png",
           "selectedIconPath": "images/add (1).png",
           "text": "发布"
         }, {
-          "pagePath": "pages/me",
+          "pagePath": "pages/message",
           "iconPath": "images/message.png",
           "selectedIconPath": "images/message (1).png",
           "text": "消息"
