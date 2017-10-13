@@ -1,26 +1,96 @@
 <style lang="less">
+  @redColor:#a2313e;
+  @grayColor:#F2F2F2;
   page{
-    background-color: #F2F2F2;
+    background-color: @grayColor;
+    height: 100%;
   }
   .messagePage{
+    .flexSetting(@direction:row, @alignItem:center, @justify: flex-start) {
+      display: flex;
+      flex-direction: @direction;
+      align-items: @alignItem;
+      justify-content: @justify;
+    }
+    height: 100%;
+    .messageItem{
+      position: relative;
+      background-color: #ffffff;
+      height: 130rpx;
+      padding:40rpx 25rpx;
+      border-bottom: 1rpx @grayColor solid;
+      .flexSetting(row, center, flex-start);
+    }
+    .thumb{
+      width: 140rpx;
+      height: 130rpx;
+    }
+    .textBox{
+      margin-left: 30rpx;
+      font-size: 32rpx;
+      height: 105rpx;
+      .flexSetting(column, flex-start, space-between);
+    }
+    .messageItem:last-of-type{
+      border-bottom: none;
+    }
+    .textDetail{
+      width: 530rpx;
+      color: #707070;
+      font-size: 30rpx;
+      line-height: 32rpx;
+      white-space:nowrap;
+      text-overflow:ellipsis; -o-text-overflow:ellipsis; overflow:hidden;
+    }
+    .time{
+      color: #707070;
+      position: absolute;
+      top:30rpx;
+      right:20rpx;
+      font-size: 28rpx;
+    }
   }
 </style>
 <template>
   <view class="messagePage">
-    我的消息
+    <block wx:if="{{noData}}">
+      <noData></noData>
+    </block>
+    <block wx:else>
+      <view class="messageItem">
+        <image class="thumb" src="{{src}}" mode="aspectFill"></image>
+        <view class="textBox">
+          <view class="time">2017-10-12</view>
+          <view>消息通知</view>
+          <view class="textDetail">消息通知注意查收消息通知注意查收,消息通知注意查收</view>
+        </view>
+      </view>
+      <view class="messageItem">
+        <image class="thumb" src="{{src}}" mode="aspectFill"></image>
+        <view class="textBox">
+          <view class="time">2017-10-12</view>
+          <view>消息通知</view>
+          <view class="textDetail">消息通知注意查收消息通知注意查收</view>
+        </view>
+      </view>
+    </block>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import noData from '../components/nodata'
 
   export default class Message extends wepy.page {
     config = {
       navigationBarTitleText: '我的消息'
     }
     components = {
+      noData:noData
     }
     data = {
+      noData:false,
+      src: '../images/thumb.png'
     }
 
     computed = {

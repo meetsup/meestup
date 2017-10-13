@@ -1,0 +1,38 @@
+<style type="less">
+  .noDataComponent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: #CCCCCC;
+    font-size: 32rpx;
+    .noDataImg{
+      width: 52rpx;
+      height: 52rpx;
+    }
+  }
+</style>
+<template>
+  <view class="noDataComponent">
+    <image class="noDataImg" src="../images/flag.png"></image>
+    <text class="noDataText">暂无数据</text>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class NoData extends wepy.component {
+    props = {
+
+    }
+    data = {
+
+    }
+    components = {
+    }
+    methods = {
+    }
+  }
+</script>

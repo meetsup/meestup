@@ -1,15 +1,16 @@
 <style lang="less">
+  @redColor:#a2313e;
+  @grayColor:#F2F2F2;
   page{
-    background-color: #f0f0f0;
+    background-color: @grayColor;
   }
   .mePage{
     .greenBgColor{
-      background-color: #32b050;
+      background-color: @redColor;
     }
     .userView{
       padding: 50rpx 0 0 50rpx;
-      height: 250rpx;
-      width: 100%;
+      height: 200rpx;
       color: #ffffff;
       display: flex;
       align-items: center;
@@ -25,11 +26,10 @@
       margin-left: 20rpx;
     }
     .userMenu{
-      background-color: #ffffff;
       margin-top: 20rpx;
     }
     .userMenuItemContainer{
-
+      background-color: #ffffff;
     }
     .userMenuItemContainerHover{
       background-color: #CCCCCC;
@@ -48,7 +48,10 @@
       margin-left: 20rpx;
     }
     .bottomBorder{
-      border-bottom: 1px #e6e6e6 solid;
+      border-bottom: 1px @grayColor solid;
+    }
+    .bottomTop{
+      margin-top: 20rpx;
     }
   }
 </style>
@@ -61,20 +64,26 @@
     <view class="userMenu">
       <view class="userMenuItemContainer" hover-class="userMenuItemContainerHover">
         <view class="userMenuItem bottomBorder">
-          <image class="userMenuItemIcon" src="../images/collection_64.png"></image>
-          <view class="userMenuItemText">我的收藏</view>
-        </view>
-      </view>
-      <view class="userMenuItemContainer" hover-class="userMenuItemContainerHover">
-        <view class="userMenuItem bottomBorder">
-          <image class="userMenuItemIcon" src="../images/message.png"></image>
-          <view class="userMenuItemText">我的消息</view>
+          <image class="userMenuItemIcon" src="../images/activity.png"></image>
+          <view class="userMenuItemText">我的活动</view>
         </view>
       </view>
       <view class="userMenuItemContainer" hover-class="userMenuItemContainerHover">
         <view class="userMenuItem">
-          <image class="userMenuItemIcon" src="../images/wechat_64.png"></image>
-          <view class="userMenuItemText">联系我们</view>
+          <image class="userMenuItemIcon" src="../images/idCard.png"></image>
+          <view class="userMenuItemText">我的信息</view>
+        </view>
+      </view>
+      <view class="userMenuItemContainer bottomTop" hover-class="userMenuItemContainerHover">
+        <view class="userMenuItem">
+          <image class="userMenuItemIcon" src="../images/paw.png"></image>
+          <view class="userMenuItemText">浏览历史</view>
+        </view>
+      </view>
+      <view class="userMenuItemContainer bottomTop" hover-class="userMenuItemContainerHover">
+        <view class="userMenuItem">
+          <image class="userMenuItemIcon" src="../images/aboutUs.png"></image>
+          <view class="userMenuItemText">关于我们</view>
         </view>
       </view>
     </view>
@@ -87,7 +96,7 @@
   export default class Me extends wepy.page {
     config = {
       navigationBarTitleText: '我的',
-      navigationBarBackgroundColor: '#32b050',
+      navigationBarBackgroundColor: '#a2313e',
       navigationBarTextStyle:'white',
       backgroundColor:'#cccccc'
     }

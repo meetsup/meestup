@@ -1,4 +1,6 @@
 <style lang="less">
+  @redColor:#a2313e;
+  @grayColor:#F2F2F2;
   page{
     background-color: #F2F2F2;
   }
@@ -10,7 +12,7 @@
       justify-content: @justify;
     }
     .indexHeader{
-      .flexSetting(row,center,space-between);
+      .flexSetting(row,center,flex-start);
       background-color: #ffffff;
       padding:20rpx;
     }
@@ -28,7 +30,7 @@
       border-right-width: 0;
     }
     .inputView{
-      width: 460rpx;
+      flex-grow: 1;
       height: 50rpx;
       background-color: #F2F2F2;
       border-radius: 50rpx;
@@ -56,21 +58,6 @@
     .slideImage{
       width: 100%;
     }
-    .types{
-      .flexSetting(row,center,space-around);
-      flex-wrap:wrap;
-      padding:10rpx 20rpx;
-    }
-    .typeItem{
-      width: 120rpx;
-      height: 50rpx;
-      background-color: #0BB20C;
-      border-radius: 60rpx;
-      color:#ffffff;
-      font-size: 30rpx;
-      margin: 10rpx 20rpx;
-      .flexSetting(row,center,center);
-    }
     .indexBody{
 
     }
@@ -82,7 +69,7 @@
     .titleIcon{
       height: 38rpx;
       width: 8rpx;
-      background-color: #990000;
+      background-color: @redColor;
       margin-right: 10rpx;
     }
     .listItem{
@@ -111,18 +98,18 @@
     .timeCity{
       width: 100%;
       font-size: 30rpx;
-      color: #bfbfbf;
+      color: grayColor;
       line-height: 32rpx;
       .flexSetting(row,center,space-between);
     }
     .line3{
       width:100%;
-      color: #a2313e;
+      color: @redColor;
       .flexSetting(row,center,space-between);
     }
     .line31{
       font-size: 30rpx;
-      color: #bfbfbf;
+      color: @grayColor;
       line-height: 32rpx;
       .flexSetting(row,center,flex-start);
     }
@@ -206,7 +193,7 @@ import wepy from 'wepy'
 
 export default class Index extends wepy.page {
   config = {
-    navigationBarTitleText: 'Meets Up'
+    navigationBarTitleText: '来吧!'
   }
   components = {
   }

@@ -1,13 +1,45 @@
 <style lang="less">
+  @redColor:#a2313e;
+  @grayColor:#F2F2F2;
   page{
-    background-color: #F2F2F2;
+    background-color: @grayColor;
   }
-  .newActvityPage{
+  .newActivityPage{
+    .userMenuItemContainer{
+      background-color: #ffffff;
+    }
+    .userMenuItemContainerHover{
+      background-color: #CCCCCC;
+    }
+    .userMenuItem{
+      display: flex;
+      align-items: center;
+      padding:20rpx 0 20rpx 0;
+      margin-left: 20rpx;
+    }
+    .userMenuItemIcon{
+      width: 64rpx;
+      height: 64rpx;
+    }
+    .userMenuItemText{
+      margin-left: 20rpx;
+    }
+    .bottomBorder{
+      border-bottom: 1px #e6e6e6 solid;
+    }
+    .bottomTop{
+      margin-top: 20rpx;
+    }
   }
 </style>
 <template>
-  <view class="newActvityPage">
-    新建活动
+  <view class="newActivityPage">
+    <view class="userMenuItemContainer" hover-class="userMenuItemContainerHover">
+      <view class="userMenuItem">
+        <image class="userMenuItemIcon" src="../images/idCard.png"></image>
+        <view class="userMenuItemText">我的信息</view>
+      </view>
+    </view>
   </view>
 </template>
 
