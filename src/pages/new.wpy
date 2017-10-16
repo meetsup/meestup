@@ -5,40 +5,216 @@
     background-color: @grayColor;
   }
   .newActivityPage{
-    .userMenuItemContainer{
-      background-color: #ffffff;
-    }
-    .userMenuItemContainerHover{
-      background-color: #CCCCCC;
-    }
-    .userMenuItem{
+    position: relative;
+    .flexSetting(@direction:row, @alignItem:center, @justify: flex-start) {
       display: flex;
-      align-items: center;
-      padding:20rpx 0 20rpx 0;
-      margin-left: 20rpx;
+      flex-direction: @direction;
+      align-items: @alignItem;
+      justify-content: @justify;
     }
-    .userMenuItemIcon{
-      width: 64rpx;
-      height: 64rpx;
+    .blur(@blur){
+      -webkit-filter: blur(@blur); /* Chrome, Opera */
+      -moz-filter: blur(@blur);
+      -ms-filter: blur(@blur);
+      filter: blur(@blur);
     }
-    .userMenuItemText{
-      margin-left: 20rpx;
-    }
+
     .bottomBorder{
       border-bottom: 1px #e6e6e6 solid;
     }
     .bottomTop{
       margin-top: 20rpx;
     }
+    .slideImage{
+      width: 100%;
+      .blur(2px)
+    }
+    .uploadView{
+      width: 100%;
+      height: 250rpx;
+      position: absolute;
+      .flexSetting(column,center,center);
+      z-index: 4;
+      text-align: center;
+      font-size: 32rpx;
+    }
+    .cameraImg{
+      width: 60rpx;
+      height: 60rpx;
+    }
+    .mask {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 250rpx;
+      opacity: 0.3;
+      background-color: #000000;
+      z-index: 2;
+    }
+    .newItemContainer{
+      background-color: #ffffff;
+    }
+    .newItemContainerHover{
+      background-color: #CCCCCC;
+    }
+    .newItem{
+      display: flex;
+      align-items: center;
+      padding:30rpx 0 30rpx 0;
+      margin-left: 20rpx;
+      font-size: 32rpx;
+    }
+    .bottomBorder{
+      border-bottom: 1px @grayColor solid;
+    }
+    .newItemIcon{
+      width: 64rpx;
+      height: 64rpx;
+    }
+    .newItemText{
+      margin-left: 20rpx;
+    }
+    .newItemTitle{
+      margin-right: 20rpx;
+    }
+    .newItemInput{
+      width: 100%;
+    }
+    .newItemTime{
+      color: #808080;
+      font-size: 32rpx;
+    }
+    .nowrap {
+      white-space: nowrap;
+    }
+    .zhi{
+      margin:0 20rpx 0 125rpx
+    }
+    .newItemDetail{
+      background-color: #ffffff;
+      height: 200rpx;
+      padding: 30rpx 20rpx;
+    }
+    .marginTop{
+      margin-top: 20rpx;
+    }
+    .location{
+      margin: 0 20rpx;
+      padding-bottom: 10rpx;
+      .flexSetting(row,center,flex-start);
+    }
+    .locationImg{
+      width: 40rpx;
+      height: 40rpx;
+    }
+    .leftIcon {
+      margin: -6rpx 24rpx;
+      width: 17rpx;
+      height: 17rpx;
+      display: inline-block;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      border: 4rpx solid #c7c7cc;
+      border-left-width: 0;
+      border-top-width: 0;
+    }
+    .newSelect{
+      .flexSetting(row,center,space-between);
+      padding:20rpx 0 20rpx 0;
+      margin-left: 20rpx;
+      margin-right: 20rpx;
+      font-size: 32rpx;
+    }
+    .rowFlex{
+      .flexSetting(row,center,flex-start);
+    }
+    .submitButton{
+      width: 100%;
+      text-align: center;
+      padding: 30rpx 0;
+      font-size: 32rpx;
+      color: #ffffff;
+      background-color: @redColor;
+    }
   }
 </style>
 <template>
   <view class="newActivityPage">
-    <view class="userMenuItemContainer" hover-class="userMenuItemContainerHover">
-      <view class="userMenuItem">
-        <image class="userMenuItemIcon" src="../images/idCard.png"></image>
-        <view class="userMenuItemText">我的信息</view>
+    <view>
+      <!--<view class="mask"></view>-->
+      <view class="uploadView">
+        <image class="cameraImg" src="../images/camera.png"></image>
+        <view>上传图片</view>
       </view>
+      <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}"
+              duration="{{duration}}" circular="{{circular}}">
+        <block wx:for="{{imgUrls}}">
+          <swiper-item catchtap="imageTap">
+            <image src="{{item}}" class="slideImage" height="250rpx"/>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+    <view class="newItemContainer">
+      <view class="newItem bottomBorder">
+        <view class="nowrap newItemTitle">主题</view>
+        <input class="newItemInput" placeholder="活动主题"/>
+      </view>
+    </view>
+    <view class="newItemContainer">
+      <view class="newItem">
+        <view class="nowrap newItemTitle">时间</view>
+        <picker mode="date" value="2016-09-01" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
+          <view class="newItemTime">开始时间</view>
+        </picker>
+        <view class="nowrap zhi">至</view>
+        <picker mode="date" value="2016-09-01" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
+          <view class="newItemTime">结束时间</view>
+        </picker>
+      </view>
+    </view>
+    <view class="newItemDetail marginTop">
+      <view class="newItemTime">活动详情描述</view>
+    </view>
+    <view class="newItemContainer">
+      <view class="location bottomBorder">
+        <image class="locationImg" src="../images/location.png"></image>
+        <view class="newItemTime">上海 闵行</view>
+      </view>
+    </view>
+    <view class="newItemContainer">
+      <view class="newItem">
+        <view class="nowrap newItemTitle">详细地点</view>
+        <input class="newItemInput" placeholder="活动详细地点"/>
+      </view>
+    </view>
+    <view class="newItemContainer marginTop" hover-class="newItemContainerHover">
+      <view class="newSelect">
+        <view class="rowFlex">
+          <image class="newItemIcon" src="../images/money.png"></image>
+          <view class="newItemText">活动费用</view>
+        </view>
+        <view class="rowFlex">
+          <view>免费</view>
+          <view class="leftIcon"></view>
+        </view>
+      </view>
+    </view>
+    <view class="newItemContainer" hover-class="newItemContainerHover">
+      <view class="newSelect">
+        <view class="rowFlex">
+          <image class="newItemIcon" src="../images/category2.png"></image>
+          <view class="newItemText">活动类型</view>
+        </view>
+        <view class="rowFlex">
+          <view>私人</view>
+          <view class="leftIcon"></view>
+        </view>
+      </view>
+    </view>
+    <view class="submitButton marginTop">
+      <text>发起活动</text>
     </view>
   </view>
 </template>
@@ -53,6 +229,13 @@
     components = {
     }
     data = {
+      imgUrls: [
+      ],
+      indicatorDots: true,
+      autoplay: true,
+      interval: 5000,
+      duration: 1000,
+      circular:true
     }
 
     computed = {
