@@ -49,6 +49,9 @@
       right:20rpx;
       font-size: 28rpx;
     }
+    .messageItemHover{
+      background-color: #CCCCCC;
+    }
   }
 </style>
 <template>
@@ -57,7 +60,7 @@
       <noData></noData>
     </block>
     <block wx:else>
-      <view class="messageItem">
+      <view class="messageItem" hover-class="messageItemHover">
         <image class="thumb" src="{{src}}" mode="aspectFill"></image>
         <view class="textBox">
           <view class="time">2017-10-12</view>
@@ -65,7 +68,7 @@
           <view class="textDetail">消息通知注意查收消息通知注意查收,消息通知注意查收</view>
         </view>
       </view>
-      <view class="messageItem">
+      <view class="messageItem" hover-class="messageItemHover">
         <image class="thumb" src="{{src}}" mode="aspectFill"></image>
         <view class="textBox">
           <view class="time">2017-10-12</view>

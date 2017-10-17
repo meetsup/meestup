@@ -6,6 +6,10 @@
 <script>
   import wepy from 'wepy'
   import 'wepy-async-function'
+  import './modules/fetch.js'
+  import './modules/util.js'
+
+  wx.baseUrl = 'https://shellteo.top/';
 
   export default class extends wepy.app {
     config = {
@@ -14,7 +18,9 @@
         'pages/discovery',
         'pages/new',
         'pages/message',
-        'pages/me'
+        'pages/me',
+        'pages/activityDetail',
+        'pages/myActivity'
       ],
       window: {
         backgroundTextStyle: 'light',
@@ -23,35 +29,35 @@
         navigationBarTextStyle: 'black'
       },
       tabBar: {
-        "color": "#8a8a8a",
-        "selectedColor": "#a2313e",
-        "backgroundColor": "#ffffff",
-        "borderStyle": "black",
-        "list": [{
-          "pagePath": "pages/index",
-          "iconPath": "images/home.png",
-          "selectedIconPath": "images/home2.png",
-          "text": "首页"
+        'color': '#8a8a8a',
+        'selectedColor': '#a2313e',
+        'backgroundColor': '#ffffff',
+        'borderStyle': 'black',
+        'list': [{
+          'pagePath': 'pages/index',
+          'iconPath': 'images/home.png',
+          'selectedIconPath': 'images/home2.png',
+          'text': '首页'
         }, {
-          "pagePath": "pages/discovery",
-          "iconPath": "images/category.png",
-          "selectedIconPath": "images/category2.png",
-          "text": "分类"
+          'pagePath': 'pages/discovery',
+          'iconPath': 'images/category.png',
+          'selectedIconPath': 'images/category2.png',
+          'text': '分类'
         }, {
-          "pagePath": "pages/new",
-          "iconPath": "images/add_c.png",
-          "selectedIconPath": "images/add_c2.png",
-          "text": "发布"
+          'pagePath': 'pages/new',
+          'iconPath': 'images/add_c.png',
+          'selectedIconPath': 'images/add_c2.png',
+          'text': '发布'
         }, {
-          "pagePath": "pages/message",
-          "iconPath": "images/chatbox.png",
-          "selectedIconPath": "images/chatbox2.png",
-          "text": "消息"
+          'pagePath': 'pages/message',
+          'iconPath': 'images/chatbox.png',
+          'selectedIconPath': 'images/chatbox2.png',
+          'text': '消息'
         }, {
-          "pagePath": "pages/me",
-          "iconPath": "images/user.png",
-          "selectedIconPath": "images/user2.png",
-          "text": "我的"
+          'pagePath': 'pages/me',
+          'iconPath': 'images/user.png',
+          'selectedIconPath': 'images/user2.png',
+          'text': '我的'
         }]
       }
     }

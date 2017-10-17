@@ -78,6 +78,9 @@
       margin-bottom: 10rpx;
       .flexSetting(row,flex-start,flex-start);
     }
+    .listItemHover{
+      background-color: #CCCCCC;
+    }
     .listItemImg{
       height: 220rpx;
       width: 500rpx;
@@ -109,7 +112,7 @@
     }
     .line31{
       font-size: 30rpx;
-      color: @grayColor;
+      color: #CCCCCC;
       line-height: 32rpx;
       .flexSetting(row,center,flex-start);
     }
@@ -139,37 +142,7 @@
     </view>
     <view class="indexBody">
       <view class="bodyTitle"><view class="titleIcon"></view><text>热门推荐</text></view>
-      <view class="listItem">
-        <image class="listItemImg" src="{{src}}"></image>
-        <view class="listItemContent">
-          <view class="line1">
-            <text>2017年 10月途虎养车员工内部福利申请活动</text>
-          </view>
-          <view class="timeCity">
-            <text>2017-10-17</text><text>上海</text>
-          </view>
-          <view class="line3">
-            <view class="line31"><image class="eye" src="../images/eye.png"></image><text>10081</text></view>
-            <text>免费</text>
-          </view>
-        </view>
-      </view>
-      <view class="listItem">
-        <image class="listItemImg" src="{{src}}"></image>
-        <view class="listItemContent">
-          <view class="line1">
-            <text>2017年 10月途虎养车员工内部福利申请活动</text>
-          </view>
-          <view class="timeCity">
-            <text>2017-10-17</text><text>上海</text>
-          </view>
-          <view class="line3">
-            <view class="line31"><image class="eye" src="../images/eye.png"></image><text>10081</text></view>
-            <text>免费</text>
-          </view>
-        </view>
-      </view>
-      <view class="listItem">
+      <view class="listItem" hover-class="listItemHover" catchtap="toDetail">
         <image class="listItemImg" src="{{src}}"></image>
         <view class="listItemContent">
           <view class="line1">
@@ -218,6 +191,12 @@ export default class Index extends wepy.page {
   methods = {
     imageTap(e){
       console.log(e);
+    },
+    toDetail(){
+      console.log('to detail');
+      wx.navigateTo({
+        url: 'activityDetail'
+      })
     }
   }
 

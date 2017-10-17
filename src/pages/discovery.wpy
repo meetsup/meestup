@@ -146,29 +146,16 @@
     </view>
     <view class="types">
       <view class="sideBar">
-        <view class="sideBarItem"><text class="typesText">互联网</text></view>
-        <view class="sideBarItem selectType"><text class="typesText">金融</text></view>
-        <view class="sideBarItem"><text class="typesText">娱乐休闲</text></view>
-        <view class="sideBarItem"><text class="typesText">其他</text></view>
+        <block wx:for="{{types}}">
+          <view class="sideBarItem {{index===selectIndex?'selectType':''}}" catchtap="selectSidebar" data-index="{{index}}"><text class="typesText">{{item.name}}</text></view>
+        </block>
       </view>
       <view class="typeContent">
-        <view class="typeContentItem"><text class="typesText">理财</text></view>
-        <view class="typeContentItem"><text class="typesText">股票</text></view>
-        <view class="typeContentItem"><text class="typesText">基金</text></view>
+        <block wx:for="{{selectTypes}}">
+          <view class="typeContentItem"><text class="typesText">{{item}}</text></view>
+        </block>
       </view>
     </view>
-   <!-- <view class="types">
-      <block wx:for="{{types}}">
-        <view class="typeItem">
-          <view class="typeTitle"><view class="typeTitleIcon"></view><text>{{item.title}}</text></view>
-          <view class="typeContent">
-            <block wx:for="{{item.content}}" wx:for-index="idx" wx:for-item="itemName">
-              <view class="typeContentItem">{{itemName}}</view>
-            </block>
-          </view>
-        </view>
-      </block>
-    </view>-->
   </view>
 </template>
 
@@ -183,23 +170,57 @@
     }
     data = {
       imageSrc:'http://www.1tong.com/uploads/wallpaper/distinct/222-3-1920x1200.jpg',
-      types: [
-        {title:'互联网',content:['Java', 'JavaScript','SQL','C','C++','C#','Python','PHP','云计算','物联网','游戏']},
-        {title:'金融',content:['理财','股票','基金']},
-        {title:'娱乐休闲',content:['旅行','运动','生活']}
-      ]
+      types: [],
+      selectTypes:[],
+      selectIndex:0
     }
 
     computed = {
     }
 
     methods = {
+      selectSidebar(e){
+        console.log(e.currentTarget.dataset.index);
+        let idx = e.currentTarget.dataset.index;
+        this.selectIndex = idx;
+        this.selectTypes = this.types[idx].content;
+      }
     }
 
     events = {
     }
 
     onLoad() {
+      let subscribeData = {};
+      let types = []
+      let requestData = {
+        openId: '043'
+      }
+      wx.fetch({
+        data: requestData,
+        method:'POST',
+        url: wx.baseUrl + 'laiba/type/all'
+      }).then((res) => {
+        let resData = res.data.jsonData;
+        console.log(resData);
+        for(let i=0;i<resData.length;i++){
+          if(!subscribeData[resData[i].father]){
+            subscribeData[resData[i].father] = [];
+          }
+          subscribeData[resData[i].father].push(resData[i].name)
+        }
+        let j = 0;
+        for(let i in subscribeData){
+          types[j]={};
+          types[j].name = i;
+          types[j].content = subscribeData[i];
+          j++;
+        }
+        console.log(types);
+        this.selectTypes = types[0].content
+        this.types = types
+        this.$apply();
+      })
     }
   }
 </script>

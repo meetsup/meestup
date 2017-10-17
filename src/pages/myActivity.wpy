@@ -1,0 +1,98 @@
+<style lang="less">
+  @redColor:#a2313e;
+  @grayColor:#F2F2F2;
+  page{
+    background-color: @grayColor;
+  }
+  .myActivityPage{
+    .flexSetting(@direction:row, @alignItem:center, @justify: flex-start) {
+      display: flex;
+      flex-direction: @direction;
+      align-items: @alignItem;
+      justify-content: @justify;
+    }
+    .tabs {
+      width: 100%;
+      height: 78rpx;
+      background-color: #ffffff; // border-bottom: 2rpx solid #e0e0e0;
+      .flexSetting();
+      .tabItem {
+        height: 70rpx;
+        width: 300rpx;
+        line-height: 70rpx;
+        text-align: center;
+        color: #b0b0b0;
+        font-size: 32rpx;
+        box-sizing: border-box;
+      }
+      .tabItem:first-of-type {
+        margin-left: 0rpx;
+      }
+      .selectedTab{
+        color: @redColor;
+        border-bottom: 5rpx @redColor solid;
+      }
+    }
+  }
+</style>
+<template>
+  <view class="myActivityPage">
+    <view style="width: 100%; height: 90rpx;">
+      <view class="tabs">
+        <block wx:for="{{tabs}}" wx:key="index">
+          <view class="tabItem {{currentPage === index ? 'selectedTab' : ''}}" bindtap="chooseTab({{index}})">{{item}}</view>
+        </block>
+      </view>
+    </view>
+    <swiper indicator-dots="{{indicatorDots}}"
+            autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+      <block wx:for="{{imgUrls}}">
+        <swiper-item>
+          <image src="{{item}}" class="slide-image" width="355" height="150"/>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Me extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的活动'
+    }
+    components = {
+    }
+
+    data = {
+      tabs:['全部','我参与的','我发起的'],
+      imgUrls: [
+        'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+        'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
+        'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
+      ],
+      indicatorDots: false,
+      autoplay: false,
+      interval: 5000,
+      duration: 1000,
+      circular:true,
+      currentPage:0
+    }
+
+    computed = {
+    }
+
+    methods = {
+      chooseTab(index){
+        this.currentPage = index
+      }
+    }
+
+    events = {
+    }
+
+    onLoad() {
+    }
+  }
+</script>

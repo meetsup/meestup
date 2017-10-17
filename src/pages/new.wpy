@@ -130,9 +130,11 @@
       .flexSetting(row,center,flex-start);
     }
     .submitButton{
+      .flexSetting(row,center,center);
+      position: fixed;
+      bottom: 0;
       width: 100%;
-      text-align: center;
-      padding: 30rpx 0;
+      height: 100rpx;
       font-size: 32rpx;
       color: #ffffff;
       background-color: @redColor;
@@ -141,79 +143,81 @@
 </style>
 <template>
   <view class="newActivityPage">
-    <view>
-      <!--<view class="mask"></view>-->
-      <view class="uploadView">
-        <image class="cameraImg" src="../images/camera.png"></image>
-        <view>上传图片</view>
-      </view>
-      <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}"
-              duration="{{duration}}" circular="{{circular}}">
-        <block wx:for="{{imgUrls}}">
-          <swiper-item catchtap="imageTap">
-            <image src="{{item}}" class="slideImage" height="250rpx"/>
-          </swiper-item>
-        </block>
-      </swiper>
-    </view>
-    <view class="newItemContainer">
-      <view class="newItem bottomBorder">
-        <view class="nowrap newItemTitle">主题</view>
-        <input class="newItemInput" placeholder="活动主题"/>
-      </view>
-    </view>
-    <view class="newItemContainer">
-      <view class="newItem">
-        <view class="nowrap newItemTitle">时间</view>
-        <picker mode="date" value="2016-09-01" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
-          <view class="newItemTime">开始时间</view>
-        </picker>
-        <view class="nowrap zhi">至</view>
-        <picker mode="date" value="2016-09-01" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
-          <view class="newItemTime">结束时间</view>
-        </picker>
-      </view>
-    </view>
-    <view class="newItemDetail marginTop">
-      <view class="newItemTime">活动详情描述</view>
-    </view>
-    <view class="newItemContainer">
-      <view class="location bottomBorder">
-        <image class="locationImg" src="../images/location.png"></image>
-        <view class="newItemTime">上海 闵行</view>
-      </view>
-    </view>
-    <view class="newItemContainer">
-      <view class="newItem">
-        <view class="nowrap newItemTitle">详细地点</view>
-        <input class="newItemInput" placeholder="活动详细地点"/>
-      </view>
-    </view>
-    <view class="newItemContainer marginTop" hover-class="newItemContainerHover">
-      <view class="newSelect">
-        <view class="rowFlex">
-          <image class="newItemIcon" src="../images/money.png"></image>
-          <view class="newItemText">活动费用</view>
+    <view style="margin-bottom: 100rpx">
+      <view>
+        <!--<view class="mask"></view>-->
+        <view class="uploadView">
+          <image class="cameraImg" src="../images/camera.png"></image>
+          <view>上传图片</view>
         </view>
-        <view class="rowFlex">
-          <view>免费</view>
-          <view class="leftIcon"></view>
+        <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}"
+                duration="{{duration}}" circular="{{circular}}">
+          <block wx:for="{{imgUrls}}">
+            <swiper-item catchtap="imageTap">
+              <image src="{{item}}" class="slideImage" height="250rpx"/>
+            </swiper-item>
+          </block>
+        </swiper>
+      </view>
+      <view class="newItemContainer">
+        <view class="newItem bottomBorder">
+          <view class="nowrap newItemTitle">主题</view>
+          <input class="newItemInput" placeholder="活动主题"/>
         </view>
       </view>
-    </view>
-    <view class="newItemContainer" hover-class="newItemContainerHover">
-      <view class="newSelect">
-        <view class="rowFlex">
-          <image class="newItemIcon" src="../images/category2.png"></image>
-          <view class="newItemText">活动类型</view>
+      <view class="newItemContainer">
+        <view class="newItem">
+          <view class="nowrap newItemTitle">时间</view>
+          <picker mode="date" value="2016-09-01" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
+            <view class="newItemTime">开始时间</view>
+          </picker>
+          <view class="nowrap zhi">至</view>
+          <picker mode="date" value="2016-09-01" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
+            <view class="newItemTime">结束时间</view>
+          </picker>
         </view>
-        <view class="rowFlex">
-          <view>私人</view>
-          <view class="leftIcon"></view>
+      </view>
+      <view class="newItemDetail marginTop">
+        <view class="newItemTime">活动详情描述</view>
+      </view>
+      <view class="newItemContainer">
+        <view class="location bottomBorder">
+          <image class="locationImg" src="../images/location.png"></image>
+          <view class="newItemTime">上海 闵行</view>
+        </view>
+      </view>
+      <view class="newItemContainer">
+        <view class="newItem">
+          <view class="nowrap newItemTitle">详细地点</view>
+          <input class="newItemInput" placeholder="活动详细地点"/>
+        </view>
+      </view>
+      <view class="newItemContainer marginTop" hover-class="newItemContainerHover">
+        <view class="newSelect">
+          <view class="rowFlex">
+            <image class="newItemIcon" src="../images/money.png"></image>
+            <view class="newItemText">活动费用</view>
+          </view>
+          <view class="rowFlex">
+            <view>免费</view>
+            <view class="leftIcon"></view>
+          </view>
+        </view>
+      </view>
+      <view class="newItemContainer" hover-class="newItemContainerHover">
+        <view class="newSelect">
+          <view class="rowFlex">
+            <image class="newItemIcon" src="../images/category2.png"></image>
+            <view class="newItemText">活动类型</view>
+          </view>
+          <view class="rowFlex">
+            <view>私人</view>
+            <view class="leftIcon"></view>
+          </view>
         </view>
       </view>
     </view>
-    <view class="submitButton marginTop">
+    <view class="submitButton">
       <text>发起活动</text>
     </view>
   </view>

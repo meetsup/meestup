@@ -62,7 +62,7 @@
       <view class="userName">黎耀辉</view>
     </view>
     <view class="userMenu">
-      <view class="userMenuItemContainer" hover-class="userMenuItemContainerHover">
+      <view class="userMenuItemContainer" hover-class="userMenuItemContainerHover" catchtap="toMyActivity">
         <view class="userMenuItem bottomBorder">
           <image class="userMenuItemIcon" src="../images/activity.png"></image>
           <view class="userMenuItemText">我的活动</view>
@@ -112,6 +112,11 @@
     }
 
     methods = {
+      toMyActivity(){
+        wx.navigateTo({
+          url: 'myActivity'
+        })
+      }
     }
 
     events = {
