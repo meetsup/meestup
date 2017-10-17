@@ -44,11 +44,12 @@
         </block>
       </view>
     </view>
-    <swiper indicator-dots="{{indicatorDots}}"
-            autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-      <block wx:for="{{imgUrls}}">
+    <swiper current="{{currentPage}}" bindchange="tabChange">
+      <block wx:for="{{tabs}}">
         <swiper-item>
-          <image src="{{item}}" class="slide-image" width="355" height="150"/>
+          <view catchtap="toDetail">
+            <activityItem :listData.sync="listData"></activityItem>
+          </view>
         </swiper-item>
       </block>
     </swiper>
@@ -57,27 +58,28 @@
 
 <script>
   import wepy from 'wepy'
+  import activityItem from '../components/activityItem'
 
-  export default class Me extends wepy.page {
+  export default class myActivity extends wepy.page {
     config = {
       navigationBarTitleText: '我的活动'
     }
     components = {
+      activityItem:activityItem
     }
 
     data = {
       tabs:['全部','我参与的','我发起的'],
-      imgUrls: [
-        'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-        'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
-        'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
-      ],
-      indicatorDots: false,
-      autoplay: false,
-      interval: 5000,
-      duration: 1000,
-      circular:true,
-      currentPage:0
+      currentPage:0,
+      listData:{
+        title:'途虎前端大会，有你不了解的前端知识！',
+        time:'2017-10-22',
+        location:'上海闵行',
+        browser:'11',
+        money:'免费',
+        imgSrc:'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
+      },
+      src:'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
     }
 
     computed = {
@@ -86,6 +88,12 @@
     methods = {
       chooseTab(index){
         this.currentPage = index
+      },
+      toDetail(){
+        console.log('detail');
+      },
+      tabChange(e){
+        this.currentPage = e.detail.current;
       }
     }
 
