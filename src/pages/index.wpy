@@ -274,47 +274,11 @@ export default class Index extends wepy.page {
     })
   }
   /**
-   * 保存用户信息
-   * */
-  loginSaveMessage(){
-    let requestData = {
-      'signature':'1',
-      'rawData':'',
-      'encryptedData':'1',
-      'iv':'1',
-      'openId':'1'
-    }
-    wx.fetch({
-      data: requestData,
-      method:'POST',
-      url: wx.baseUrl + 'laiba/login/saveMessage'
-    }).then((res) => {
-      let resData = res.data.jsonData;
-      console.log(resData);
-    })
-  }
-  /**
-   * 用户登录
-   * */
-  loginUser(code){
-    let requestData = {
-      'js_code':code
-    }
-    wx.fetch({
-      data: requestData,
-      method:'POST',
-      url: wx.baseUrl + 'laiba/login/user'
-    }).then((res) => {
-      let resData = res.data.jsonData;
-      console.log(resData);
-    })
-  }
-  /**
    * 我的--我参加的活动
    * */
-  myActivity(){
+  myActivity(openId){
     let requestData = {
-      'openId':'043'
+      'openId':openId
     }
     wx.fetch({
       data: requestData,
@@ -329,9 +293,9 @@ export default class Index extends wepy.page {
   /**
    * 我的--获取用户详细信息
    * */
-  myMessage(){
+  myMessage(openId){
     let requestData = {
-      'openId':'043'
+      'openId':openId
     }
     wx.fetch({
       data: requestData,
@@ -397,16 +361,70 @@ export default class Index extends wepy.page {
       }
     })
   }
+  wxGetUserInfo(openId){
+    /**
+     * 先授权，授权范围是scope.userInfo
+     * */
+    wx.authorize({
+      scope:'scope.userInfo',
+      success:function () {
+        /**
+         * 然后通过微信的getUserInfo接口获取数据和一些加密数据
+         * */
+        wx.getUserInfo({
+          success: function(res) {
+            let requestData = {
+              signature:res.signature,
+              rawData:res.rawData,
+              encryptedData:res.encryptedData,
+              iv:res.iv,
+              openId:openId
+            }
+            console.log(res);
+            /**
+             * 通过加密数据等向后台请求，保存用户信息
+             * */
+            wx.fetch({
+              data: requestData,
+              method:'POST',
+              url: wx.baseUrl + 'laiba/login/saveMessage'
+            }).then((res) => {
+              let resData = res.data.jsonData;
+              console.log(resData);
+            })
+          }
+        })
+      }
+    })
+  }
+  /**
+   * 用户登录
+   * */
+  loginUser(code){
+    let self = this;
+    let requestData = {
+      'js_code':code
+    }
+    wx.fetch({
+      data: requestData,
+      method:'POST',
+      url: wx.baseUrl + 'laiba/login/user'
+    }).then((res) => {
+      let resData = res.data.jsonData;
+      console.log(resData);
+      self.wxGetUserInfo(resData.openId);
+    })
+  }
 
   onLoad() {
-    this.getHomePageDetail();
+    /*this.getHomePageDetail();
     this.homepageListActivity();
     this.homepageSearch();
     this.typeAll();
-    //this.loginSaveMessage();
+    this.loginSaveMessage();
     this.myActivity();
     this.myMessage();
-    this.myChange();
+    this.myChange();*/
     this.wxLogin();
   }
 }
