@@ -39,8 +39,8 @@
           "text": "分类"
         }, {
           "pagePath": "pages/new",
-          "iconPath": "images/add_c.png",
-          "selectedIconPath": "images/add_c2.png",
+          "iconPath": "images/add.png",
+          "selectedIconPath": "images/add2.png",
           "text": "发布"
         }, {
           "pagePath": "pages/message",
