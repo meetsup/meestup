@@ -58,8 +58,8 @@
 <template>
   <view class="mePage">
     <view class="userView greenBgColor">
-      <image class="avatar" mode="aspectFill" src="{{imageSrc}}"></image>
-      <view class="userName">黎耀辉</view>
+      <image class="avatar" mode="aspectFill" src="{{avatarUrl}}"></image>
+      <view class="userName">{{nickName}}</view>
     </view>
     <view class="userMenu">
       <view class="userMenuItemContainer" hover-class="userMenuItemContainerHover" catchtap="toMyActivity">
@@ -104,7 +104,8 @@
     }
 
     data = {
-      imageSrc:'http://www.1tong.com/uploads/wallpaper/distinct/222-3-1920x1200.jpg'
+      avatarUrl:wx.getStorageSync('avatarUrl'),
+      nickName:wx.getStorageSync('nickName')
     }
 
     computed = {

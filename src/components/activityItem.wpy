@@ -22,11 +22,13 @@
     .listItemContent{
       margin-left: 20rpx;
       height: 220rpx;
+      width: 100%;
       .flexSetting(column,flex-start,space-between);
     }
     .eye{
       width: 32rpx;
       height: 32rpx;
+      margin-right: 4rpx;
     }
     .line1{
       width: 100%;
@@ -58,7 +60,7 @@
 </style>
 <template>
   <view class="listItemComponent" hover-class="listItemHover">
-    <image class="listItemImg" src="{{listData.imgSrc}}"></image>
+    <image class="listItemImg" src="{{listData.imgSrc}}" mode="aspectFill"></image>
     <view class="listItemContent">
       <view class="line1">
         <text>{{listData.title}}</text>

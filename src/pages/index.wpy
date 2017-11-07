@@ -350,6 +350,10 @@ export default class Index extends wepy.page {
       console.log(resData);
     })
   }
+
+  /**
+   * 调用微信login获取code，然后根据code去
+   */
   wxLogin(){
     let self = this;
     wx.login({
@@ -361,6 +365,29 @@ export default class Index extends wepy.page {
       }
     })
   }
+  /**
+   * 用户登录，根据code登录
+   * */
+  loginUser(code){
+    let self = this;
+    let requestData = {
+      'js_code':code
+    }
+    wx.fetch({
+      data: requestData,
+      method:'POST',
+      url: wx.baseUrl + 'laiba/login/user'
+    }).then((res) => {
+      let resData = res.data.jsonData;
+      console.log(resData);
+      self.wxGetUserInfo(resData.openId);
+    })
+  }
+
+  /**
+   * 根据openId
+   * @param openId
+   */
   wxGetUserInfo(openId){
     /**
      * 先授权，授权范围是scope.userInfo
@@ -397,24 +424,6 @@ export default class Index extends wepy.page {
       }
     })
   }
-  /**
-   * 用户登录
-   * */
-  loginUser(code){
-    let self = this;
-    let requestData = {
-      'js_code':code
-    }
-    wx.fetch({
-      data: requestData,
-      method:'POST',
-      url: wx.baseUrl + 'laiba/login/user'
-    }).then((res) => {
-      let resData = res.data.jsonData;
-      console.log(resData);
-      self.wxGetUserInfo(resData.openId);
-    })
-  }
 
   onLoad() {
     /*this.getHomePageDetail();
@@ -425,7 +434,8 @@ export default class Index extends wepy.page {
     this.myActivity();
     this.myMessage();
     this.myChange();*/
-    this.wxLogin();
+    //this.myChange();
+    //this.myHistory();
   }
 }
 </script>

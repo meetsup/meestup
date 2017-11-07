@@ -71,6 +71,86 @@
 
     onLaunch() {
     }
+
+    onShow() {
+      this.wxLogin();
+    }
+
+    /**
+     * 调用微信login获取code，然后根据code去调用用户登录的功能
+     */
+    wxLogin(){
+      let self = this;
+      wx.login({
+        success: function (res) {
+          console.log('login success')
+          if (res.code) {
+            self.loginUser(res.code)
+          }
+        }
+      })
+    }
+    /**
+     * 用户登录，根据code登录
+     * */
+    loginUser(code){
+      let self = this;
+      let requestData = {
+        'js_code':code
+      }
+      wx.fetch({
+        data: requestData,
+        method:'POST',
+        url: wx.baseUrl + 'laiba/login/user'
+      }).then((res) => {
+        let resData = res.data.jsonData;
+        console.log('loginUser',resData);
+        wx.setStorageSync('key', resData.openId);
+        self.wxGetUserInfo(resData.openId);
+      })
+    }
+    /**
+     * 根据openId
+     * @param openId
+     */
+    wxGetUserInfo(openId){
+      /**
+       * 先授权，授权范围是scope.userInfo
+       * */
+      wx.authorize({
+        scope:'scope.userInfo',
+        success:function () {
+          /**
+           * 然后通过微信的getUserInfo接口获取数据和一些加密数据
+           * */
+          wx.getUserInfo({
+            success: function(res) {
+              let requestData = {
+                signature:res.signature,
+                rawData:res.rawData,
+                encryptedData:res.encryptedData,
+                iv:res.iv,
+                openId:openId
+              }
+              console.log('wx.getUserInfo',res);
+              wx.setStorageSync('nickName', res.userInfo.nickName);
+              wx.setStorageSync('avatarUrl', res.userInfo.avatarUrl);
+              /**
+               * 通过加密数据等向后台请求，保存用户信息
+               * */
+              wx.fetch({
+                data: requestData,
+                method:'POST',
+                url: wx.baseUrl + 'laiba/login/saveMessage'
+              }).then((res) => {
+                let resData = res.data.jsonData;
+                console.log('saveMessage',resData);
+              })
+            }
+          })
+        }
+      })
+    }
   }
 
 </script>
