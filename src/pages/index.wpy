@@ -308,9 +308,9 @@ export default class Index extends wepy.page {
   /**
    * 我的--浏览历史(我参与的和我创建的全部返回,区别:我参与的对象属性attr为join,我创建的attr为create)
    * */
-  myHistory(){
+  myHistory(openId){
     let requestData = {
-      'openId':'043'
+      'openId':openId
     }
     wx.fetch({
       data: requestData,
@@ -515,6 +515,7 @@ export default class Index extends wepy.page {
     //this.myHistory();
     let openId = wx.getStorageSync('key')
     this.homepageListActivity(openId)
+    this.myHistory(openId)
   }
 }
 </script>

@@ -20,7 +20,8 @@
         'pages/message',
         'pages/me',
         'pages/activityDetail',
-        'pages/myActivity'
+        'pages/myActivity',
+        'pages/myHistory'
       ],
       window: {
         backgroundTextStyle: 'light',

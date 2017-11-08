@@ -1,0 +1,84 @@
+<style lang="less">
+  @redColor:#a2313e;
+  @grayColor:#F2F2F2;
+  page{
+    background-color: @grayColor;
+    height: 100%;
+  }
+  .myHistoryPage{
+    width:100%;
+    height:100%;
+    position:relative;
+  }
+</style>
+<template>
+  <view class="myHistoryPage">
+    <repeat for="{{activityList}}" key="index" index="index" item="item">
+      <view catchtap="toDetail">
+        <activityItem :listData.sync="item"></activityItem>
+      </view>
+    </repeat>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import activityItem from '../components/activityItem'
+
+  export default class myHistory extends wepy.page {
+    config = {
+      navigationBarTitleText: '浏览历史'
+    }
+    components = {
+      activityItem:activityItem
+    }
+
+    data = {
+      activityList:[]
+    }
+
+    computed = {
+    }
+
+    methods = {
+      toDetail(){
+        console.log('detail');
+      }
+    }
+
+    events = {
+    }
+
+    onLoad() {
+      this.myHistory(wx.getStorageSync('key'));
+    }
+    /**
+     * 我的--我参加的活动
+     * */
+    myHistory(openId){
+      let requestData = {
+        'openId':openId
+      }
+      wx.fetch({
+        data: requestData,
+        method:'POST',
+        url: wx.baseUrl + 'laiba/my/history'
+      }).then((res) => {
+        let resData = res.data.jsonData;
+        resData.forEach((item)=>{
+          console.log('item:',item);
+          this.activityList.push({
+            title:item.activityname,
+            time:item.starttime.split(' ')[0],
+            location:item.activityplace||'暂无',
+            browser:item.browsecount||'0',
+            money:item.isfree||'免费',
+            imgSrc:item.uploadpictures||'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
+          })
+        })
+        console.log(resData);
+        this.$apply();
+      })
+    }
+  }
+</script>

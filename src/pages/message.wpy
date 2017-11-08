@@ -105,7 +105,33 @@
     events = {
     }
 
+    /**
+     * 获取我的消息列表
+     * 注意:任务类型分为三种
+     * type1='修改用户信息',此时返回修改后的用户所有信息,包括待处理任务信息,
+     * 待处理任务信息如下(id为待处理任务id,用于删除待处理任务或者标记已读,tasktype为待处理任务类型,此时为1,createtime为待处理任务创建时间,可用于排序),
+     * type1只会返回一条最新的修改信息,其他信息忽略,标记为已删除的信息不会返回:  返回值的标记为"userPageList"
+     *
+     * type2='参加某个活动',具体返回信息如下,分为几个部分,标记为已删除的信息不会返回,返回值的标记为"joinActivityNewsList"
+     *
+       * type3='某某参加我的活动',标记为已删除的信息不会返回,返回值的标记为"joinMyActivityList",具体参考如下
+     */
+    myNewsAll(openId){
+      let requestData = {
+        'openId':openId
+      }
+      wx.fetch({
+        data: requestData,
+        method:'POST',
+        url: wx.baseUrl + 'laiba/mynews/all'
+      }).then((res) => {
+        let resData = res.data.jsonData;
+        console.log(resData);
+      })
+    }
     onLoad() {
+      let openId = wx.getStorageSync('key')
+      this.myNewsAll(openId);
     }
   }
 </script>

@@ -74,7 +74,7 @@
           <view class="userMenuItemText">我的信息</view>
         </view>
       </view>
-      <view class="userMenuItemContainer bottomTop" hover-class="userMenuItemContainerHover">
+      <view class="userMenuItemContainer bottomTop" hover-class="userMenuItemContainerHover" catchtap="toMyHistory">
         <view class="userMenuItem">
           <image class="userMenuItemIcon" src="../images/paw.png"></image>
           <view class="userMenuItemText">浏览历史</view>
@@ -116,6 +116,11 @@
       toMyActivity(){
         wx.navigateTo({
           url: 'myActivity'
+        })
+      },
+      toMyHistory(){
+        wx.navigateTo({
+          url: 'myHistory'
         })
       }
     }
