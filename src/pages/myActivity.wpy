@@ -108,7 +108,7 @@
       activityList:[],
       listData:{
         title:'途虎前端大会，有你不了解的前端知识！',
-        time:'2017-10-22',
+        time:'2017-10-22 ~ 2017-10-24',
         location:'上海闵行',
         browser:'11',
         money:'免费',
@@ -155,10 +155,10 @@
           this.activityList.push({
             title:item.activityname,
             time:item.starttime.split(' ')[0],
-            location:item.location||'暂无',
-            browser:item.browserNumber||'0',
-            money:'免费',
-            imgSrc:item.imgUrl||'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
+            location:item.activityplace||'暂无',
+            browser:item.browsecount||'0',
+            money:item.isfree||'免费',
+            imgSrc:item.uploadpictures||'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
           })
         })
         console.log(resData);

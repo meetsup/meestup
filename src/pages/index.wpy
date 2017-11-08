@@ -72,50 +72,6 @@
       background-color: @redColor;
       margin-right: 10rpx;
     }
-    .listItem{
-      padding:20rpx;
-      background-color: #ffffff;
-      margin-bottom: 10rpx;
-      .flexSetting(row,flex-start,flex-start);
-    }
-    .listItemHover{
-      background-color: #CCCCCC;
-    }
-    .listItemImg{
-      height: 220rpx;
-      width: 500rpx;
-    }
-    .listItemContent{
-      margin-left: 20rpx;
-      height: 220rpx;
-      .flexSetting(column,flex-start,space-between);
-    }
-    .eye{
-      width: 32rpx;
-      height: 32rpx;
-    }
-    .line1{
-      width: 100%;
-      .flexSetting(row,center,flex-start);
-    }
-    .timeCity{
-      width: 100%;
-      font-size: 30rpx;
-      color: grayColor;
-      line-height: 32rpx;
-      .flexSetting(row,center,space-between);
-    }
-    .line3{
-      width:100%;
-      color: @redColor;
-      .flexSetting(row,center,space-between);
-    }
-    .line31{
-      font-size: 30rpx;
-      color: #CCCCCC;
-      line-height: 32rpx;
-      .flexSetting(row,center,flex-start);
-    }
   }
 </style>
 <template>
@@ -142,33 +98,25 @@
     </view>
     <view class="indexBody">
       <view class="bodyTitle"><view class="titleIcon"></view><text>热门推荐</text></view>
-      <view class="listItem" hover-class="listItemHover" catchtap="toDetail">
-        <image class="listItemImg" src="{{src}}"></image>
-        <view class="listItemContent">
-          <view class="line1">
-            <text>2017年 10月途虎养车员工内部福利申请活动</text>
-          </view>
-          <view class="timeCity">
-            <text>2017-10-17</text><text>上海</text>
-          </view>
-          <view class="line3">
-            <view class="line31"><image class="eye" src="../images/eye.png"></image><text>10081</text></view>
-            <text>免费</text>
-          </view>
+      <repeat for="{{activityList}}" key="index" index="index" item="item">
+        <view catchtap="toDetail" data-id="{{item.id}}">
+          <activityItem :listData.sync="item"></activityItem>
         </view>
-      </view>
+      </repeat>
     </view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
+import activityItem from '../components/activityItem'
 
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '来吧!'
   }
   components = {
+    activityItem:activityItem
   }
 
   data = {
@@ -182,7 +130,16 @@ export default class Index extends wepy.page {
     interval: 5000,
     duration: 1000,
     circular:true,
-    src: 'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
+    src: 'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg',
+    activityList:[],
+    listData:{
+      title:'途虎前端大会，有你不了解的前端知识！',
+      time:'2017-10-22',
+      location:'上海闵行',
+      browser:'11',
+      money:'免费',
+      imgSrc:'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
+    }
   }
 
   computed = {
@@ -192,10 +149,11 @@ export default class Index extends wepy.page {
     imageTap(e){
       console.log(e);
     },
-    toDetail(){
-      console.log('to detail');
+    toDetail(e){
+      let id = e.currentTarget.dataset.id;
+      console.log('to detail',e,id);
       wx.navigateTo({
-        url: 'activityDetail'
+        url: 'activityDetail?id='+id
       })
     }
   }
@@ -204,12 +162,12 @@ export default class Index extends wepy.page {
   }
 
   /**
-   * 获取首页列表数据
+   * 首页-获取活动详细信息
    * */
-  getHomePageDetail(){
+  getHomePageDetail(openId,activityId){
     let requestData = {
-      openId: '043',
-      activityId:2
+      openId: openId,
+      activityId:activityId
     }
     wx.fetch({
       data: requestData,
@@ -223,11 +181,11 @@ export default class Index extends wepy.page {
   /**
    * 首页-活动列表查询
    * */
-  homepageListActivity(){
+  homepageListActivity(openId){
     let requestData = {
-      openId:'043',
+      openId:openId,
       page:1,
-      size:2
+      size:4
     }
     wx.fetch({
       data: requestData,
@@ -235,7 +193,20 @@ export default class Index extends wepy.page {
       url: wx.baseUrl + 'laiba/homepage/listActivity'
     }).then((res) => {
       let resData = res.data.jsonData;
+      resData.forEach((item)=>{
+        console.log('item:',item);
+        this.activityList.push({
+          id:item.activityid,
+          title:item.activityname,
+          time:item.starttime.split(' ')[0],
+          location:item.activityplace||'暂无',
+          browser:item.browsecount||'0',
+          money:item.isfree||'免费',
+          imgSrc:item.uploadpictures||'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
+        })
+      })
       console.log(resData);
+      this.$apply();
     })
   }
   /**
@@ -425,6 +396,112 @@ export default class Index extends wepy.page {
     })
   }
 
+  /**
+   * 修改用户信息(参数选填,openid必传)注意:后端没做数据校验
+   */
+  updateUserInfo(){
+    let requestData = {
+      'country': '中国',
+      'unionid': '',
+      'gender': '1',
+      'avatarurl': '',
+      'city': '上海',
+      'openid': 'on7Lz0Dk0-swIBY6xH6OaZCOC0yA',
+      'high': '195',
+      'province': '上海',
+      'interest': '旅游',
+      'telphone': '17621820823',
+      'nickname': 'Hhkkk',
+      'age': '18',
+      'email': 'kai_hhkkk@163.com',
+      'height': '55'
+    }
+    wx.fetch({
+      data: requestData,
+      method:'POST',
+      url: wx.baseUrl + 'laiba/my/updateUserInfo'
+    }).then((res) => {
+      let resData = res.data.jsonData;
+      console.log(resData);
+    })
+  }
+
+  /**
+   * 参加活动,返回:{"jsonData":"","errMsg":"","errorCode":"","status":"0"}
+   */
+  joinActivity(){
+    let requestData = {
+      'openId':'on7Lz0Dk0-swIBY6xH6OaZCOC0yA',
+      'activityId':'3'
+    }
+    wx.fetch({
+      data: requestData,
+      method:'POST',
+      url: wx.baseUrl + 'laiba/homepage/join'
+    }).then((res) => {
+      let resData = res.data.jsonData;
+      console.log(resData);
+    })
+  }
+
+  /**
+   * 获取我的消息列表
+   * 注意:任务类型分为三种
+   * type1='修改用户信息',此时返回修改后的用户所有信息,包括待处理任务信息,
+   * 待处理任务信息如下(id为待处理任务id,用于删除待处理任务或者标记已读,tasktype为待处理任务类型,此时为1,createtime为待处理任务创建时间,可用于排序),
+   * type1只会返回一条最新的修改信息,其他信息忽略,标记为已删除的信息不会返回:  返回值的标记为"userPageList"
+   *
+   * type2='参加某个活动',具体返回信息如下,分为几个部分,标记为已删除的信息不会返回,返回值的标记为"joinActivityNewsList"
+   *
+   * type3='某某参加我的活动',标记为已删除的信息不会返回,返回值的标记为"joinMyActivityList",具体参考如下
+   */
+  myNewsAll(openId){
+    let requestData = {
+      'openId':openId
+    }
+    wx.fetch({
+      data: requestData,
+      method:'POST',
+      url: wx.baseUrl + 'laiba/mynews/all'
+    }).then((res) => {
+      let resData = res.data.jsonData;
+      console.log(resData);
+    })
+  }
+
+  /**
+   * 创建活动，入参:以表单方式提交 post请求
+   * 标签名参考下面的对象属性,不一致会导致无法接收该参数
+   * 注意:上传图片会返回一个url给前端,前端需要将url赋值到对应的表单上,如果有多张图片,需要将每次返回的url拼接在一起,以逗号隔开!
+   */
+  createActivity(){
+    let requestData = {
+      'activityid':'123',
+      'activityname':'123',
+      'activityplace':'123',
+      'uploadpictures':'123',
+      'starttime':'123',
+      'endtime':'123',
+      'phone':'123',
+      'openid':'123',
+      'fabulous':'123',
+      'browsecount':'123',
+      'isfree':'123',
+      'isprivate':'123',
+      'activitytag':'123',
+      'type':'123',
+      'detail':'123'
+    }
+    wx.fetch({
+      data: requestData,
+      method:'POST',
+      url: wx.baseUrl + 'laiba/homepage/create'
+    }).then((res) => {
+      let resData = res.data.jsonData;
+      console.log(resData);
+    })
+  }
+
   onLoad() {
     /*this.getHomePageDetail();
     this.homepageListActivity();
@@ -436,6 +513,8 @@ export default class Index extends wepy.page {
     this.myChange();*/
     //this.myChange();
     //this.myHistory();
+    let openId = wx.getStorageSync('key')
+    this.homepageListActivity(openId)
   }
 }
 </script>

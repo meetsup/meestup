@@ -73,7 +73,10 @@
     }
 
     onShow() {
-      this.wxLogin();
+      //如果没存openId，就登录获取openId和nickName和avatarUrl
+      if(!wx.getStorageSync('key')){
+        this.wxLogin();
+      }
     }
 
     /**
