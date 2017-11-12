@@ -212,12 +212,12 @@ export default class Index extends wepy.page {
   /**
    * 首页-查询(不传条件全查询,带分页)
    * */
-  homepageSearch(){
+  homepageSearch(openId,value){
     let requestData = {
-      'openId':'043',
+      'openId':openId,
       'page':'1',
       'size':'2',
-      'value':'吃'
+      'value':value
     }
     wx.fetch({
       data: requestData,
@@ -515,6 +515,7 @@ export default class Index extends wepy.page {
     //this.myHistory();
     let openId = wx.getStorageSync('key')
     this.homepageListActivity(openId)
+    this.homepageSearch(openId,'吃饭');
     this.myHistory(openId)
   }
 }
