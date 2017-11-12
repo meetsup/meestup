@@ -10,6 +10,7 @@
   import './modules/util.js'
 
   wx.baseUrl = 'https://shellteo.top/';
+  wx.imgUrl = 'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg';
 
   export default class extends wepy.app {
     config = {
@@ -21,7 +22,8 @@
         'pages/me',
         'pages/activityDetail',
         'pages/myActivity',
-        'pages/myHistory'
+        'pages/myHistory',
+        'pages/search'
       ],
       window: {
         backgroundTextStyle: 'light',

@@ -80,7 +80,7 @@
       <text class="city">上海市</text>
       <view class="icon_up"></view>
       <!--<input class="search" maxlength="10" placeholder="" />-->
-      <view class="inputView">
+      <view class="inputView" catchtap="toSearch">
         <image class="searchIcon" src="../images/search.png"></image>
         <text class="searchText">请输入进行搜索</text>
       </view>
@@ -155,6 +155,11 @@ export default class Index extends wepy.page {
       wx.navigateTo({
         url: 'activityDetail?id='+id
       })
+    },
+    toSearch(e){
+      wx.navigateTo({
+        url: 'search'
+      })
     }
   }
 
@@ -201,7 +206,7 @@ export default class Index extends wepy.page {
           location:item.activityplace||'暂无',
           browser:item.browsecount||'0',
           money:item.isfree||'免费',
-          imgSrc:item.uploadpictures||'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
+          imgSrc:item.uploadpictures||wx.imgUrl
         })
       })
       console.log(resData);
@@ -211,12 +216,12 @@ export default class Index extends wepy.page {
   /**
    * 首页-查询(不传条件全查询,带分页)
    * */
-  homepageSearch(){
+  homepageSearch(openId,value){
     let requestData = {
-      'openId':'043',
+      'openId':openId,
       'page':'1',
       'size':'2',
-      'value':'吃'
+      'value':value
     }
     wx.fetch({
       data: requestData,
@@ -514,6 +519,7 @@ export default class Index extends wepy.page {
     //this.myHistory();
     let openId = wx.getStorageSync('key')
     this.homepageListActivity(openId)
+    this.homepageSearch(openId,'吃饭');
     this.myHistory(openId)
   }
 }

@@ -1,0 +1,77 @@
+<style lang="less">
+  @redColor:#a2313e;
+  @grayColor:#F2F2F2;
+  .flexSetting(@direction:row, @alignItem:center, @justify: flex-start) {
+    display: flex;
+    flex-direction: @direction;
+    align-items: @alignItem;
+    justify-content: @justify;
+  }
+  .messageItem{
+    position: relative;
+    background-color: #ffffff;
+    height: 130rpx;
+    padding:40rpx 25rpx;
+    border-bottom: 1rpx @grayColor solid;
+    .flexSetting(row, center, flex-start);
+    .thumb{
+      width: 140rpx;
+      height: 130rpx;
+    }
+    .textBox{
+      margin-left: 30rpx;
+      font-size: 32rpx;
+      height: 105rpx;
+      .flexSetting(column, flex-start, space-between);
+    }
+    .textDetail{
+      width: 530rpx;
+      color: #707070;
+      font-size: 30rpx;
+      line-height: 32rpx;
+      white-space:nowrap;
+      text-overflow:ellipsis; -o-text-overflow:ellipsis; overflow:hidden;
+    }
+    .time{
+      color: #707070;
+      position: absolute;
+      top:30rpx;
+      right:20rpx;
+      font-size: 28rpx;
+    }
+  }
+
+  .messageItemHover{
+    background-color: #CCCCCC;
+  }
+</style>
+<template>
+  <view class="messageItem" hover-class="messageItemHover">
+    <image class="thumb" src="{{messageData.imgUrl}}" mode="aspectFill"></image>
+    <view class="textBox">
+      <view class="time">{{messageData.time}}</view>
+      <view>{{messageData.title}}</view>
+      <view class="textDetail">{{messageData.detail}}</view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class activityItem extends wepy.component {
+    props = {
+      messageData:Object
+    }
+    components = {}
+    data = {
+      src1:'https://cdn.pixabay.com/photo/2017/04/05/11/56/image-in-the-image-2204798_960_720.jpg',
+      src2:'https://www.istockphoto.com/resources/images/PhotoFTLP/img_68460491.jpg',
+      src3:'https://tinypng.com/images/social/website.jpg'
+    }
+    events = {}
+    watch = {}
+    methods = {}
+    onLoad() {
+    }
+  }
+</script>
