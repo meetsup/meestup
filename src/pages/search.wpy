@@ -1,0 +1,200 @@
+<style lang="less">
+  @redColor:#a2313e;
+  @grayColor:#F2F2F2;
+  page{
+    background-color: #F2F2F2;
+  }
+  .searchPage{
+    .flexSetting(@direction:row, @alignItem:center, @justify: flex-start) {
+      display: flex;
+      flex-direction: @direction;
+      align-items: @alignItem;
+      justify-content: @justify;
+    }
+    .indexHeader{
+      .flexSetting(row,center,flex-start);
+      background-color: #ffffff;
+      padding:20rpx;
+    }
+    .city{
+      font-size: 28rpx;
+    }
+    .icon_up {
+      margin: -12rpx 15rpx 0 15rpx;
+      width: 17rpx;
+      height: 17rpx;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      border: 1rpx solid #c7c7cc;
+      border-top-width: 0;
+      border-right-width: 0;
+    }
+    .inputView{
+      width: 100%;
+      flex-grow: 1;
+      height: 50rpx;
+      background-color: #F2F2F2;
+      border-radius: 50rpx;
+      padding: 8rpx 20rpx;
+      .flexSetting();
+    }
+    .searchIcon{
+      height: 45rpx;
+      width: 45rpx;
+      margin-right: 10rpx;
+    }
+    .inputClass{
+      width: 100%;
+      flex-grow: 1;
+      font-size: 28rpx;
+    }
+    .message{
+      margin-left: 15rpx;
+      height: 50rpx;
+      width: 50rpx;
+    }
+    .slideImage{
+      width: 100%;
+    }
+    .indexBody{
+
+    }
+    .bodyTitle{
+      .flexSetting(row,center,flex-start);
+      font-size: 32rpx;
+      margin: 20rpx 0 10rpx 0;
+    }
+    .titleIcon{
+      height: 38rpx;
+      width: 8rpx;
+      background-color: @redColor;
+      margin-right: 10rpx;
+    }
+    .backIcon{
+      height: 50rpx;
+      width: 50rpx;
+      margin-right: 20rpx;
+    }
+    .placeholderClass{
+      font-size: 28rpx;
+    }
+    .searchButton{
+      background-color: @redColor;
+      color: #ffffff;
+      margin-left: 10rpx;
+      font-size: 28rpx;
+      padding:15rpx 20rpx;
+      white-space: nowrap;
+    }
+    .searchHover{
+      background-color: #CCCCCC;
+    }
+    .indexBody{
+      height: 500rpx;
+    }
+  }
+</style>
+<template>
+  <view class="searchPage">
+    <view class="indexHeader">
+      <image class="backIcon" src="../images/back-gray.png" catchtap="goBack"></image>
+      <view class="inputView">
+        <image class="searchIcon" src="../images/search.png"></image>
+        <input placeholder="来吧，搜索你想要了解的活动" placeholder-class="placeholderClass" auto-focus class="inputClass" bindinput="onInput"/>
+      </view>
+      <view class="searchButton" hover-class="searchHover" catchtap="search">搜索</view>
+    </view>
+    <view></view>
+    <view class="indexBody">
+      <block wx:if="{{activityList.length>0}}">
+        <repeat for="{{activityList}}" key="index" index="index" item="item">
+          <view catchtap="toDetail" data-id="{{item.id}}">
+            <activityItem :listData.sync="item"></activityItem>
+          </view>
+        </repeat>
+      </block>
+      <block wx:else>
+        <noData></noData>
+      </block>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import activityItem from '../components/activityItem'
+import noData from '../components/nodata'
+
+export default class Search extends wepy.page {
+  config = {
+    navigationBarTitleText: '来吧!'
+  }
+  components = {
+    activityItem:activityItem,
+    noData:noData
+  }
+
+  data = {
+    searchInputValue:'',
+    activityList:[],
+  }
+
+  computed = {
+  }
+
+  methods = {
+    goBack(){
+      wx.navigateBack()
+    },
+    onInput(e){
+      this.searchInputValue = e.detail.value;
+    },
+    search(){
+      this.activityList = [];
+      let openId = wx.getStorageSync('key');
+      let inputValue = this.searchInputValue;
+      this.homepageSearch(openId,inputValue);
+    }
+  }
+
+  events = {
+  }
+
+
+  /**
+   * 首页-查询(不传条件全查询,带分页)
+   * */
+  homepageSearch(openId,value){
+    let requestData = {
+      'openId':openId,
+      'page':'1',
+      'size':'2',
+      'value':value
+    }
+    wx.fetch({
+      data: requestData,
+      method:'POST',
+      url: wx.baseUrl + 'laiba/homepage/search'
+    }).then((res) => {
+      let resData = res.data.jsonData;
+      resData.forEach((item)=>{
+        console.log('item:',item);
+        this.activityList.push({
+          id:item.activityid,
+          title:item.activityname,
+          time:item.starttime.split(' ')[0],
+          location:item.activityplace||'暂无',
+          browser:item.browsecount||'0',
+          money:item.isfree||'免费',
+          imgSrc:item.uploadpictures||wx.imgUrl
+        })
+      })
+      console.log(resData);
+      this.$apply();
+    })
+  }
+
+  onLoad() {
+  }
+}
+</script>

@@ -22,7 +22,8 @@
         'pages/me',
         'pages/activityDetail',
         'pages/myActivity',
-        'pages/myHistory'
+        'pages/myHistory',
+        'pages/search'
       ],
       window: {
         backgroundTextStyle: 'light',

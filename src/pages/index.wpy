@@ -80,7 +80,7 @@
       <text class="city">上海市</text>
       <view class="icon_up"></view>
       <!--<input class="search" maxlength="10" placeholder="" />-->
-      <view class="inputView">
+      <view class="inputView" catchtap="toSearch">
         <image class="searchIcon" src="../images/search.png"></image>
         <text class="searchText">请输入进行搜索</text>
       </view>
@@ -154,6 +154,11 @@ export default class Index extends wepy.page {
       console.log('to detail',e,id);
       wx.navigateTo({
         url: 'activityDetail?id='+id
+      })
+    },
+    toSearch(e){
+      wx.navigateTo({
+        url: 'search'
       })
     }
   }
