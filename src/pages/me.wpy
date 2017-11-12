@@ -58,8 +58,8 @@
 <template>
   <view class="mePage">
     <view class="userView greenBgColor">
-      <image class="avatar" mode="aspectFill" src="{{imageSrc}}"></image>
-      <view class="userName">黎耀辉</view>
+      <image class="avatar" mode="aspectFill" src="{{avatarUrl}}"></image>
+      <view class="userName">{{nickName}}</view>
     </view>
     <view class="userMenu">
       <view class="userMenuItemContainer" hover-class="userMenuItemContainerHover" catchtap="toMyActivity">
@@ -74,7 +74,7 @@
           <view class="userMenuItemText">我的信息</view>
         </view>
       </view>
-      <view class="userMenuItemContainer bottomTop" hover-class="userMenuItemContainerHover">
+      <view class="userMenuItemContainer bottomTop" hover-class="userMenuItemContainerHover" catchtap="toMyHistory">
         <view class="userMenuItem">
           <image class="userMenuItemIcon" src="../images/paw.png"></image>
           <view class="userMenuItemText">浏览历史</view>
@@ -104,7 +104,8 @@
     }
 
     data = {
-      imageSrc:'http://www.1tong.com/uploads/wallpaper/distinct/222-3-1920x1200.jpg'
+      avatarUrl:wx.getStorageSync('avatarUrl'),
+      nickName:wx.getStorageSync('nickName')
     }
 
     computed = {
@@ -115,6 +116,11 @@
       toMyActivity(){
         wx.navigateTo({
           url: 'myActivity'
+        })
+      },
+      toMyHistory(){
+        wx.navigateTo({
+          url: 'myHistory'
         })
       }
     }

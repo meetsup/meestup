@@ -61,7 +61,7 @@
       background-color: @redColor;
       .flexSetting(row,center,center);
     }
-    .submitImg{
+    .shareImg{
       border-top: 1rpx @redColor solid;
       height: 100rpx;
       width: 150rpx;
@@ -71,6 +71,9 @@
     .shareIcon{
       width: 40rpx;
       height: 40rpx;
+    }
+    button{
+      border-radius: 0;
     }
   }
 </style>
@@ -87,42 +90,24 @@
       </swiper>
     </view>
     <view class="activityInfo">
-      <view class="title">工单详情，工单详情，工单详情，工单详情</view>
+      <view class="title">{{title}}</view>
       <view class="desc">
-        <view class="descBox"><image class="descIcon" src="../images/time-red.png"></image>2017-10-15 至 2017-10-19</view>
-        <view class="descBox"><image class="descIcon" src="../images/location-red.png"></image>上海市闵行区虹梅南路</view>
-        <view class="descBox"><image class="descIcon" src="../images/user-red.png"></image>规模 10人</view>
-        <view class="descBox"><image class="descIcon" src="../images/phone-red.png"></image>咨询电话 13900112139</view>
+        <view class="descBox"><image class="descIcon" src="../images/time-red.png"></image>{{time}}</view>
+        <view class="descBox"><image class="descIcon" src="../images/location-red.png"></image>{{location}}</view>
+        <view class="descBox"><image class="descIcon" src="../images/user-red.png"></image>{{scale}}</view>
+        <view class="descBox"><image class="descIcon" src="../images/phone-red.png"></image>{{phone}}</view>
       </view>
       <view class="detail">
         <text>
-          第一阶段：在 app.json 中配置
-
-          "tabBar": {
-          "list": [{
-          "pagePath": "pages/index/index",
-          "text": "首页"
-          }, {
-          "pagePath": "pages/logs/logs",
-          "text": "日志"
-          }]
-          }
-          出现问题：有些页面不想有tabBar，如：在首页发现没有身份信息，跳转到登录页时仍然有TabBar。
-          第二阶段：只有一级页面才会出现Tabbar ，所谓的一级页面就是Tabbar里定义的页面
-          如果此页面没有在Tabbar里定义，不会显示TabBar的
-
-          问题依然存在，登录页依然存在TabBar。
-          第三阶段：如果从一级页面 redirectTo到其他页面，及时其他页面没有在 TabBar定义的列表里也会显示TabBar
-
-          最终解决问题的方法是，加入当前也是一级页面，到希望跳转到的页面不要有Tabbar时，不要使用 redirectTo而是使用 navigateTo
+          {{detail}}
         </text>
       </view>
     </view>
     <view class="submitActivity">
-      <view class="submitImg">
+      <button class="shareImg" open-type="share">
         <image class="shareIcon" src="../images/share.png"></image>
-      </view>
-      <view class="submitText">参与活动</view>
+      </button>
+      <view class="submitText" catchtap="joinActivity">参与活动</view>
     </view>
   </view>
 </template>
@@ -138,6 +123,12 @@
     }
 
     data = {
+      title:null,
+      detail:null,
+      time:null,
+      location:null,
+      scale:'规模 10人',
+      phone:'咨询电话 13900112139',
       imgUrls: [
         'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
         'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
@@ -148,20 +139,96 @@
       interval: 5000,
       duration: 1000,
       circular:true,
-      src:'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
+      src:'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
+      activityId:null
     }
 
     computed = {
-
     }
 
     methods = {
+      joinActivity(){
+        let self = this;
+        let openId = wx.getStorageSync('key');
+        wx.showModal({
+          title: 'TM快确认',
+          content: '是否真TM确认吗？',
+          success: function(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              self.joinActivity(openId,self.activityId)
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
     }
 
     events = {
     }
 
-    onLoad() {
+    /**
+     * 首页-获取活动详细信息
+     * */
+    getHomePageDetail(openId,activityId){
+      let requestData = {
+        openId: openId,
+        activityId:activityId
+      }
+      wx.fetch({
+        data: requestData,
+        method:'POST',
+        url: wx.baseUrl + 'laiba/homepage/detail'
+      }).then((res) => {
+        let resData = res.data.jsonData;
+        this.title = resData.activityname
+        this.detail = resData.detail
+        this.time = resData.starttime.split(' ')[0]+'至'+resData.endtime.split(' ')[0]
+        this.location = resData.activityplace
+        console.log(resData);
+        this.$apply();
+      })
+    }
+    /**
+     * 参加活动,返回:{"jsonData":"","errMsg":"","errorCode":"","status":"0"}
+     */
+    joinActivity(openId,activityId){
+      let requestData = {
+        'openId':openId,
+        'activityId':activityId
+      }
+      wx.fetch({
+        data: requestData,
+        noStatus:true,
+        method:'POST',
+        url: wx.baseUrl + 'laiba/homepage/join'
+      }).then((res) => {
+        let resData = res.data.jsonData;
+        let status = res.data.status;
+        if(status-0 === 1){
+          wx.showToast({
+            title:'哈哈，参与成功',
+            icon:'success',
+            duration:1500
+          })
+        }
+        console.log(resData);
+      })
+    }
+    onLoad(options) {
+      let openId = wx.getStorageSync('key');
+      let activityId = options.id;
+      this.activityId = activityId;
+      this.getHomePageDetail(openId,activityId)
+    }
+    /**
+     * 页面分享功能
+     * */
+    onShareAppMessage(){
+      return {
+        title:this.title
+      }
     }
   }
 </script>

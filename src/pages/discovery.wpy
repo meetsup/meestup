@@ -190,11 +190,14 @@
     events = {
     }
 
-    onLoad() {
+    /**
+     * 查询所有类别
+     * */
+    typeAll(openId){
       let subscribeData = {};
       let types = []
       let requestData = {
-        openId: '043'
+        'openId':openId
       }
       wx.fetch({
         data: requestData,
@@ -221,6 +224,10 @@
         this.types = types
         this.$apply();
       })
+    }
+    onLoad() {
+      let openId = wx.getStorageSync('key')
+      this.typeAll(openId);
     }
   }
 </script>
