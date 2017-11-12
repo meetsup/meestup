@@ -1,0 +1,167 @@
+<style lang="less">
+  @redColor:#a2313e;
+  @grayColor:#F2F2F2;
+  page{
+    background-color: @grayColor;
+  }
+  .flexSetting(@direction:row, @alignItem:center, @justify: flex-start) {
+    display: flex;
+    flex-direction: @direction;
+    align-items: @alignItem;
+    justify-content: @justify;
+  }
+  .activityDetailPage{
+    .slideImage{
+      width: 100%;
+    }
+    .activityInfo{
+      margin-bottom: 120rpx;
+    }
+    .title{
+      font-size: 40rpx;
+      padding:30rpx;
+      background-color: #ffffff;
+      border-bottom: 1rpx @grayColor solid;
+    }
+    .desc{
+      font-size: 32rpx;
+      color: #808080;
+      background-color: #ffffff;
+      padding: 10rpx 30rpx 30rpx 30rpx;
+    }
+    .descBox{
+      .flexSetting();
+      margin-top: 20rpx;
+      line-height: 40rpx;
+    }
+    .descIcon{
+      width: 36rpx;
+      height: 36rpx;
+      margin-right: 10rpx;
+    }
+    .detail{
+      margin-top: 20rpx;
+      padding:30rpx;
+      background-color: #ffffff;
+      font-size: 32rpx;
+      color:#515151;
+    }
+    .submitActivity{
+      position: fixed;
+      bottom:0;
+      width: 100%;
+      background-color: @redColor;
+      .flexSetting(row,center,flex-start);
+      color: #FFFFFF;
+    }
+    .submitText{
+      height: 100rpx;
+      line-height: 100rpx;
+      width: 100%;
+      background-color: @redColor;
+      .flexSetting(row,center,center);
+    }
+    .submitImg{
+      border-top: 1rpx @redColor solid;
+      height: 100rpx;
+      width: 150rpx;
+      background-color: #FFFFFF;
+      .flexSetting(row,center,center);
+    }
+    .shareIcon{
+      width: 40rpx;
+      height: 40rpx;
+    }
+  }
+</style>
+<template>
+  <view class="activityDetailPage">
+    <view class="headerImg">
+      <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}"
+              duration="{{duration}}" circular="{{circular}}">
+        <block wx:for="{{imgUrls}}">
+          <swiper-item catchtap="imageTap">
+            <image src="{{item}}" class="slideImage" height="150"/>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+    <view class="activityInfo">
+      <view class="title">工单详情，工单详情，工单详情，工单详情</view>
+      <view class="desc">
+        <view class="descBox"><image class="descIcon" src="../images/time-red.png"></image>2017-10-15 至 2017-10-19</view>
+        <view class="descBox"><image class="descIcon" src="../images/location-red.png"></image>上海市闵行区虹梅南路</view>
+        <view class="descBox"><image class="descIcon" src="../images/user-red.png"></image>规模 10人</view>
+        <view class="descBox"><image class="descIcon" src="../images/phone-red.png"></image>咨询电话 13900112139</view>
+      </view>
+      <view class="detail">
+        <text>
+          第一阶段：在 app.json 中配置
+
+          "tabBar": {
+          "list": [{
+          "pagePath": "pages/index/index",
+          "text": "首页"
+          }, {
+          "pagePath": "pages/logs/logs",
+          "text": "日志"
+          }]
+          }
+          出现问题：有些页面不想有tabBar，如：在首页发现没有身份信息，跳转到登录页时仍然有TabBar。
+          第二阶段：只有一级页面才会出现Tabbar ，所谓的一级页面就是Tabbar里定义的页面
+          如果此页面没有在Tabbar里定义，不会显示TabBar的
+
+          问题依然存在，登录页依然存在TabBar。
+          第三阶段：如果从一级页面 redirectTo到其他页面，及时其他页面没有在 TabBar定义的列表里也会显示TabBar
+
+          最终解决问题的方法是，加入当前也是一级页面，到希望跳转到的页面不要有Tabbar时，不要使用 redirectTo而是使用 navigateTo
+        </text>
+      </view>
+    </view>
+    <view class="submitActivity">
+      <view class="submitImg">
+        <image class="shareIcon" src="../images/share.png"></image>
+      </view>
+      <view class="submitText">参与活动</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class activityDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '工单详情',
+    }
+    components = {
+    }
+
+    data = {
+      imgUrls: [
+        'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+        'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
+        'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
+      ],
+      indicatorDots: true,
+      autoplay: true,
+      interval: 5000,
+      duration: 1000,
+      circular:true,
+      src:'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+    }
+
+    events = {
+    }
+
+    onLoad() {
+    }
+  }
+</script>
