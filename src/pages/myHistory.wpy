@@ -73,7 +73,7 @@
             location:item.activityplace||'暂无',
             browser:item.browsecount||'0',
             money:item.isfree||'免费',
-            imgSrc:item.uploadpictures||'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
+            imgSrc:item.uploadpictures||wx.imgUrl
           })
         })
         console.log(resData);

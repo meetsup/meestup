@@ -6,52 +6,7 @@
     height: 100%;
   }
   .messagePage{
-    .flexSetting(@direction:row, @alignItem:center, @justify: flex-start) {
-      display: flex;
-      flex-direction: @direction;
-      align-items: @alignItem;
-      justify-content: @justify;
-    }
     height: 100%;
-    .messageItem{
-      position: relative;
-      background-color: #ffffff;
-      height: 130rpx;
-      padding:40rpx 25rpx;
-      border-bottom: 1rpx @grayColor solid;
-      .flexSetting(row, center, flex-start);
-    }
-    .thumb{
-      width: 140rpx;
-      height: 130rpx;
-    }
-    .textBox{
-      margin-left: 30rpx;
-      font-size: 32rpx;
-      height: 105rpx;
-      .flexSetting(column, flex-start, space-between);
-    }
-    .messageItem:last-of-type{
-      border-bottom: none;
-    }
-    .textDetail{
-      width: 530rpx;
-      color: #707070;
-      font-size: 30rpx;
-      line-height: 32rpx;
-      white-space:nowrap;
-      text-overflow:ellipsis; -o-text-overflow:ellipsis; overflow:hidden;
-    }
-    .time{
-      color: #707070;
-      position: absolute;
-      top:30rpx;
-      right:20rpx;
-      font-size: 28rpx;
-    }
-    .messageItemHover{
-      background-color: #CCCCCC;
-    }
   }
 </style>
 <template>
@@ -60,22 +15,11 @@
       <noData></noData>
     </block>
     <block wx:else>
-      <view class="messageItem" hover-class="messageItemHover">
-        <image class="thumb" src="{{src}}" mode="aspectFill"></image>
-        <view class="textBox">
-          <view class="time">2017-10-12</view>
-          <view>消息通知</view>
-          <view class="textDetail">消息通知注意查收消息通知注意查收,消息通知注意查收</view>
+      <repeat for="{{messageList}}" key="index" index="index" item="item">
+        <view catchtap="toMessage">
+          <messageItem :messageData.sync="item"></messageItem>
         </view>
-      </view>
-      <view class="messageItem" hover-class="messageItemHover">
-        <image class="thumb" src="{{src}}" mode="aspectFill"></image>
-        <view class="textBox">
-          <view class="time">2017-10-12</view>
-          <view>消息通知</view>
-          <view class="textDetail">消息通知注意查收消息通知注意查收</view>
-        </view>
-      </view>
+      </repeat>
     </block>
   </view>
 </template>
@@ -83,23 +27,28 @@
 <script>
   import wepy from 'wepy'
   import noData from '../components/nodata'
+  import messageItem from '../components/messageItem'
 
   export default class Message extends wepy.page {
     config = {
       navigationBarTitleText: '我的消息'
     }
     components = {
-      noData:noData
+      noData:noData,
+      messageItem:messageItem
     }
     data = {
       noData:false,
-      src: '../images/thumb.png'
+      messageList:[]
     }
 
     computed = {
     }
 
     methods = {
+      toMessage(){
+
+      }
     }
 
     events = {
@@ -114,7 +63,7 @@
      *
      * type2='参加某个活动',具体返回信息如下,分为几个部分,标记为已删除的信息不会返回,返回值的标记为"joinActivityNewsList"
      *
-       * type3='某某参加我的活动',标记为已删除的信息不会返回,返回值的标记为"joinMyActivityList",具体参考如下
+     * type3='某某参加我的活动',标记为已删除的信息不会返回,返回值的标记为"joinMyActivityList",具体参考如下
      */
     myNewsAll(openId){
       let requestData = {
@@ -126,7 +75,44 @@
         url: wx.baseUrl + 'laiba/mynews/all'
       }).then((res) => {
         let resData = res.data.jsonData;
+        let joinActivityNewsList = resData.joinActivityNewsList;
+        let joinMyActivityList = resData.joinMyActivityList;
+        let userPageList = resData.userPageList;
+        //你参与别人活动的消息
+        joinActivityNewsList.forEach((item)=>{
+          this.messageList.push({
+            id:item.activityid,
+            title:item.activityname,
+            time:item.createtime.split(' ')[0],
+            detail:item.detail,
+            imgUrl:'../images/thumb.png',
+            type:item.tasktype
+          })
+        });
+        //别人参与你活动的消息
+        joinMyActivityList.forEach((item)=>{
+          this.messageList.push({
+            id:item.activityid,
+            title:item.activityname,
+            time:item.createtime.split(' ')[0],
+            detail:item.detail,
+            imgUrl:'../images/thumb.png',
+            type:item.tasktype
+          })
+        });
+        //修改个人信息的消息
+        /*userPageList.forEach((item)=>{
+          this.messageList.push({
+            id:item.id,
+            title:item.activityname,
+            time:item.createtime.split(' ')[0],
+            detail:item.detail,
+            imgUrl:'../images/thumb.png',
+            type:item.tasktype
+          })
+        });*/
         console.log(resData);
+        this.$apply();
       })
     }
     onLoad() {

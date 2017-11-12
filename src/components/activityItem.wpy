@@ -10,7 +10,7 @@
     }
     padding:20rpx;
     background-color: #ffffff;
-    margin-bottom: 10rpx;
+    margin-top: 10rpx;
     .flexSetting(row,flex-start,flex-start);
     .listItemHover{
       background-color: #CCCCCC;
@@ -110,7 +110,6 @@
     }
     components = {}
     data = {
-      src:'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
     }
     events = {}
     watch = {}
