@@ -1,0 +1,75 @@
+<style lang="less">
+  @redColor:#a2313e;
+  @grayColor:#F2F2F2;
+  page{
+    background-color: @grayColor;
+    height: 100%;
+  }
+  .flexSetting(@direction:row, @alignItem:center, @justify: flex-start) {
+    display: flex;
+    flex-direction: @direction;
+    align-items: @alignItem;
+    justify-content: @justify;
+  }
+  .aboutPage{
+    padding:20rpx;
+    .flexSetting(column,center,center);
+    .logoView{
+      margin-top: 200rpx;
+    }
+    .logo{
+      width: 200rpx;
+      height: 200rpx;
+    }
+    .title{
+      margin-top:20rpx;
+    }
+    .detail{
+      margin-top: 40rpx;
+    }
+  }
+</style>
+<template>
+  <view class="aboutPage">
+    <view class="logoView">
+      <image class="logo" src="../images/logo.png" mode="aspectFit"></image>
+    </view>
+    <view class="title">
+      <text>来吧！V 1.0.0</text>
+    </view>
+    <view class="detail">
+      来吧是一款解放上班族的应用，可以在这里找到好玩的有趣的活动，并且能够通过微信分享自己创建的的活动。
+    </view>
+    <view>
+      联系我们：18621593612
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class aboutUs extends wepy.page {
+    config = {
+      navigationBarTitleText: '关于我们'
+    }
+    components = {
+    }
+
+    data = {
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+    }
+
+    events = {
+    }
+
+    onLoad() {
+    }
+  }
+</script>

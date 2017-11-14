@@ -23,7 +23,8 @@
         'pages/activityDetail',
         'pages/myActivity',
         'pages/myHistory',
-        'pages/search'
+        'pages/search',
+        'pages/aboutus'
       ],
       window: {
         backgroundTextStyle: 'light',
