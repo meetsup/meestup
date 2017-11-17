@@ -61,12 +61,19 @@
       background-color: @redColor;
       .flexSetting(row,center,center);
     }
+    .grayColor{
+      background-color: #cccccc;
+      color: #ffffff;
+    }
     .shareImg{
       border-top: 1rpx @redColor solid;
       height: 100rpx;
       width: 150rpx;
       background-color: #FFFFFF;
       .flexSetting(row,center,center);
+    }
+    .grayColorBorder{
+      border-top: 1rpx #CCCCCC solid;
     }
     .shareIcon{
       width: 40rpx;
@@ -104,16 +111,17 @@
       </view>
     </view>
     <view class="submitActivity">
-      <button class="shareImg" open-type="share">
+      <button class="shareImg {{isEnd||hasJoin?'grayColorBorder':''}}" open-type="share">
         <image class="shareIcon" src="../images/share.png"></image>
       </button>
-      <view class="submitText" catchtap="joinActivity">参与活动</view>
+      <view class="submitText {{isEnd||hasJoin?'grayColor':''}}" catchtap="joinActivity">{{isEnd?'报名截止':hasJoin?'已参加':'参与活动'}}</view>
     </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import moment from 'moment'
 
   export default class activityDetail extends wepy.page {
     config = {
@@ -140,7 +148,9 @@
       duration: 1000,
       circular:true,
       src:'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
-      activityId:null
+      activityId:null,
+      isEnd:false,
+      hasJoin:false
     }
 
     computed = {
@@ -186,6 +196,9 @@
         this.detail = resData.detail
         this.time = resData.starttime.split(' ')[0]+'至'+resData.endtime.split(' ')[0]
         this.location = resData.activityplace
+        //如果当前时间在活动开始时间之前，isEnd为true
+        this.isEnd = moment().isBefore(resData.starttime)?false:true;
+        this.hasJoin = resData.haveJoin?true:false;
         console.log(resData);
         this.$apply();
       })
