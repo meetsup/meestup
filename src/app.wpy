@@ -23,7 +23,8 @@
         'pages/activityDetail',
         'pages/myActivity',
         'pages/myHistory',
-        'pages/search'
+        'pages/search',
+        'pages/aboutus'
       ],
       window: {
         backgroundTextStyle: 'light',
@@ -47,10 +48,10 @@
           'selectedIconPath': 'images/category2.png',
           'text': '分类'
         }, {
-          'pagePath': 'pages/new',
-          'iconPath': 'images/add.png',
-          'selectedIconPath': 'images/add2.png',
-          'text': '发布'
+          "pagePath": "pages/new",
+          "iconPath": "images/add.png",
+          "selectedIconPath": "images/add2.png",
+          "text": "发布"
         }, {
           'pagePath': 'pages/message',
           'iconPath': 'images/chatbox.png',
