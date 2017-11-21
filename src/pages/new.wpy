@@ -66,6 +66,7 @@
       padding:30rpx 0 30rpx 0;
       margin-left: 20rpx;
       font-size: 32rpx;
+      line-height: 40rpx;
     }
     .bottomBorder{
       border-bottom: 1px @grayColor solid;
@@ -84,14 +85,25 @@
       width: 100%;
     }
     .newItemTime{
+      min-width: 200rpx;
+      text-align: center;
       color: #808080;
       font-size: 32rpx;
+    }
+    .detailPlaceholder{
+      color: #808080;
+      font-size: 32rpx;
+    }
+    .detailText{
+      font-size: 32rpx;
+      width: 100%;
+      height: inherit;
     }
     .nowrap {
       white-space: nowrap;
     }
     .zhi{
-      margin:0 20rpx 0 50rpx
+      margin:0 50rpx 0 50rpx
     }
     .newItemDetail{
       background-color: #ffffff;
@@ -180,18 +192,19 @@
         </view>
       </view>
       <view class="newItemDetail marginTop">
-        <view class="newItemTime">活动详情描述</view>
+        <textarea placeholder="活动详情描述" placeholder-class="detailPlaceholder" class="detailText" maxlength="-1" bindinput="detailInput"/>
+        <!--<view class="detailText">活动详情描述</view>-->
       </view>
       <view class="newItemContainer">
-        <view class="location bottomBorder">
+        <view class="location bottomBorder" catchtap="getLocation">
           <image class="locationImg" src="../images/location.png"></image>
-          <view class="newItemTime">上海 闵行</view>
+          <view class="newItemTime">当前位置：{{address||'获取中...'}}</view>
         </view>
       </view>
       <view class="newItemContainer">
         <view class="newItem">
-          <view class="nowrap newItemTitle">详细地点</view>
-          <input class="newItemInput" placeholder="活动详细地点"/>
+          <view class="nowrap newItemTitle">活动地点</view>
+          <input class="newItemInput" placeholder="请输入活动地点" catchtap="addressInput"/>
         </view>
       </view>
       <view class="newItemContainer marginTop" hover-class="newItemContainerHover">
@@ -250,8 +263,11 @@
       endTime:'',
       costArray:['免费'],
       typeArray:['私人','公开'],
-      isFree:'',
-      isPrivate:''
+      isFree:'免费',
+      isPrivate:'私人',
+      detail:'',
+      address:'',
+      activityAddress:''
     }
 
     computed = {
@@ -290,6 +306,12 @@
       typeChange(e) {
         this.isPrivate = this.typeArray[e.detail.value]
       },
+      detailInput(e) {
+        this.detail = e.detail.value
+      },
+      addressInput(e) {
+        this.activityAddress = e.detail.value
+      },
       submitActivity() {
         let promiseArr = [];
         let len = this.imagePath.length;
@@ -301,19 +323,47 @@
           console.log('result',result);
           let options = {
             title:this.title,
-            detail:'',
-            location:'',
-            images:'',
-            startTime:'',
-            endTime:'',
+            detail:this.detail,
+            location:this.activityAddress,
+            images:result.join(','),
+            startTime:this.startTime,
+            endTime:this.endTime,
             phone:null,
-            isFree:null,
-            isPrivate:null
+            isFree:this.isFree === '免费'?'Y':'N',
+            isPrivate:this.isPrivate === '私人'?'Y':'N'
           }
+          this.createActivity(options);
         })
       }
     }
 
+    getLocation(){
+      console.log('获取位置信息')
+      let self = this;
+      wx.getLocation({
+        type: 'wgs84',
+        success(res) {
+          let latitude = res.latitude
+          let longitude = res.longitude
+          let speed = res.speed
+          let accuracy = res.accuracy
+          console.log(latitude,longitude,speed,accuracy)
+          let key = 'GAPBZ-HSCCO-YMGWE-S32ZJ-URPBH-BRFPY';
+          let requestUrl = 'http://apis.map.qq.com/ws/geocoder/v1/?location='+latitude+','+longitude+'&coord_type=1&key='+key
+          wx.fetch({
+            url: requestUrl
+          }).then((res) => {
+            let address = res.data.result.address;
+            self.address = address;
+            self.$apply();
+            console.log(address);
+          })
+        },
+        fail(error){
+          console.log(error);
+        }
+      })
+    }
     createActivity(option){
       let openId = wx.getStorageSync('key')
       let requestData = {
@@ -346,15 +396,14 @@
           filePath: filePath,
           name: 'file',
           success: function(res) {
-            resolve({
-              'FilePath': JSON.parse(res.data).jsonData.url.replace('http','https')
-            });
+            resolve(JSON.parse(res.data).jsonData.url.replace('http','https'));
           }
         })
       });
       return promise;
     }
     onLoad() {
+      this.getLocation();
     }
   }
 </script>
