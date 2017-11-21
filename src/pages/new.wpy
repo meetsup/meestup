@@ -91,7 +91,7 @@
       white-space: nowrap;
     }
     .zhi{
-      margin:0 20rpx 0 125rpx
+      margin:0 20rpx 0 50rpx
     }
     .newItemDetail{
       background-color: #ffffff;
@@ -164,18 +164,18 @@
       <view class="newItemContainer">
         <view class="newItem bottomBorder">
           <view class="nowrap newItemTitle">主题</view>
-          <input class="newItemInput" placeholder="活动主题"/>
+          <input bindinput="titleInput" class="newItemInput" placeholder="活动主题"/>
         </view>
       </view>
       <view class="newItemContainer">
         <view class="newItem">
           <view class="nowrap newItemTitle">时间</view>
-          <picker mode="date" value="2016-09-01" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
-            <view class="newItemTime">开始时间</view>
+          <picker mode="date" value="2016-09-01" start="2015-09-01" end="2017-09-01" bindchange="startTimeChange">
+            <view class="newItemTime">{{startTime||'开始时间'}}</view>
           </picker>
           <view class="nowrap zhi">至</view>
-          <picker mode="date" value="2016-09-01" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
-            <view class="newItemTime">结束时间</view>
+          <picker mode="date" value="2016-09-01" start="2015-09-01" end="2017-09-01" bindchange="endTimeChange">
+            <view class="newItemTime">{{endTime||'结束时间'}}</view>
           </picker>
         </view>
       </view>
@@ -195,28 +195,32 @@
         </view>
       </view>
       <view class="newItemContainer marginTop" hover-class="newItemContainerHover">
-        <view class="newSelect">
+        <picker bindchange="costChange" range="{{costArray}}">
+          <view class="newSelect">
           <view class="rowFlex">
             <image class="newItemIcon" src="../images/money.png"></image>
             <view class="newItemText">活动费用</view>
           </view>
           <view class="rowFlex">
-            <view>免费</view>
+            <view>{{isFree||'免费'}}</view>
             <view class="leftIcon"></view>
           </view>
         </view>
+        </picker>
       </view>
       <view class="newItemContainer" hover-class="newItemContainerHover">
-        <view class="newSelect">
+        <picker bindchange="typeChange" range="{{typeArray}}">
+          <view class="newSelect">
           <view class="rowFlex">
             <image class="newItemIcon" src="../images/category2.png"></image>
             <view class="newItemText">活动类型</view>
           </view>
           <view class="rowFlex">
-            <view>私人</view>
+            <view>{{isPrivate||'私人'}}</view>
             <view class="leftIcon"></view>
           </view>
         </view>
+        </picker>
       </view>
     </view>
     <view class="submitButton" catchtap="submitActivity">
@@ -240,7 +244,14 @@
       interval: 5000,
       duration: 1000,
       circular:true,
-      imagePath:[]
+      imagePath:[],
+      title:'',
+      startTime:'',
+      endTime:'',
+      costArray:['免费'],
+      typeArray:['私人','公开'],
+      isFree:'',
+      isPrivate:''
     }
 
     computed = {
@@ -264,6 +275,21 @@
           }
         })
       },
+      titleInput(e) {
+        this.title = e.detail.value
+      },
+      startTimeChange(e) {
+        this.startTime = e.detail.value
+      },
+      endTimeChange(e) {
+        this.endTime = e.detail.value
+      },
+      costChange(e) {
+        this.isFree = this.costArray[e.detail.value]
+      },
+      typeChange(e) {
+        this.isPrivate = this.typeArray[e.detail.value]
+      },
       submitActivity() {
         let promiseArr = [];
         let len = this.imagePath.length;
@@ -273,27 +299,36 @@
         }
         Promise.all(promiseArr).then((result) => {
           console.log('result',result);
+          let options = {
+            title:this.title,
+            detail:'',
+            location:'',
+            images:'',
+            startTime:'',
+            endTime:'',
+            phone:null,
+            isFree:null,
+            isPrivate:null
+          }
         })
       }
     }
 
-    createActivity(){
+    createActivity(option){
+      let openId = wx.getStorageSync('key')
       let requestData = {
-        'activityid':'123',
-        'activityname':'123',
-        'activityplace':'123',
-        'uploadpictures':'123',
-        'starttime':'123',
-        'endtime':'123',
-        'phone':'123',
-        'openid':'123',
-        'fabulous':'123',
-        'browsecount':'123',
-        'isfree':'123',
-        'isprivate':'123',
-        'activitytag':'123',
-        'type':'123',
-        'detail':'123'
+        'activityname':option.title,
+        'detail':option.detail,
+        'activityplace':option.location,
+        'uploadpictures':option.images,
+        'starttime':option.startTime,
+        'endtime':option.endTime,
+        'phone':option.phone,
+        'openid':openId,
+        'isfree':option.isFree,
+        'isprivate':option.isPrivate,
+        'activitytag':null,//标签，预留
+        'type':null//类别名
       }
       wx.fetch({
         data: requestData,
