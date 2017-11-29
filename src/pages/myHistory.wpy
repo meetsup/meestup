@@ -14,7 +14,7 @@
 <template>
   <view class="myHistoryPage">
     <repeat for="{{activityList}}" key="index" index="index" item="item">
-      <view catchtap="toDetail">
+      <view catchtap="toDetail" data-id="{{item.id}}">
         <activityItem :listData.sync="item"></activityItem>
       </view>
     </repeat>
@@ -41,8 +41,12 @@
     }
 
     methods = {
-      toDetail(){
-        console.log('detail');
+      toDetail(e){
+        let id = e.currentTarget.dataset.id;
+        console.log('to detail',e,id);
+        wx.navigateTo({
+          url: 'activityDetail?id='+id
+        })
       }
     }
 
@@ -67,12 +71,14 @@
         let resData = res.data.jsonData;
         resData.forEach((item)=>{
           console.log('item:',item);
+          let money = (item.isfree&&item.isfree==='Y')?'免费':'收费'
           this.activityList.push({
+            id:item.activityid,
             title:item.activityname,
             time:item.starttime.split(' ')[0],
             location:item.activityplace||'暂无',
             browser:item.browsecount||'0',
-            money:item.isfree||'免费',
+            money:money,
             imgSrc:item.uploadpictures||wx.imgUrl
           })
         })

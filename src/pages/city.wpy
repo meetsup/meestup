@@ -1,0 +1,221 @@
+<style lang="less">
+  @redColor:#a2313e;
+  @grayColor:#F2F2F2;
+  page{
+
+  }
+  .flexSetting(@direction:row, @alignItem:center, @justify: flex-start) {
+    display: flex;
+    flex-direction: @direction;
+    align-items: @alignItem;
+    justify-content: @justify;
+  }
+  .cityPage{
+    .flexSetting(column,stretch);
+    width: 100%;
+    .searchView{
+      .flexSetting();
+      /*position: fixed;*/
+      /*top: 0;*/
+      /*left: 0;*/
+      /*right: 0;*/
+      padding-bottom: 20rpx;
+    }
+    .searchIcon{
+      height: 45rpx;
+      width: 45rpx;
+    }
+    .inputView{
+      background-color: @grayColor;
+      height: 60rpx;
+      line-height: 60rpx;
+      font-size: 28rpx;
+      width: 100%;
+    }
+    .placeholder{
+      font-size: 28rpx;
+    }
+    .searchIconView{
+      background-color: @grayColor;
+      height: 60rpx;
+      padding:0 10rpx;
+      .flexSetting();
+    }
+    .icon_left {
+      margin: 0 0 0 15rpx;
+      width: 28rpx;
+      height: 28rpx;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      border: 1rpx solid #c7c7cc;
+      border-bottom-width: 0;
+      border-right-width: 0;
+    }
+    .backView{
+      width: 90rpx;
+      height: 60rpx;
+      .flexSetting(row,center,center);
+    }
+    .title{
+      background-color: @grayColor;
+      font-size: 26rpx;
+      color: #707070;
+      padding: 10rpx 20rpx;
+    }
+    .slider-nav {
+      overflow-y: hidden;
+      font-size:24rpx;
+      position: fixed;
+      top: 80rpx;
+      right: 0;
+      bottom: 0;
+      z-index: 999;
+      color: #999999;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -webkit-flex-direction: column;
+      flex-direction: column;
+      -webkit-justify-content: space-around;
+      justify-content: space-around;
+    }
+
+    .slider-nav .eachindex {
+      width: 65rpx;
+      text-align: center;
+      height: 50rpx;
+    }
+    .cityItem{
+      .flexSetting(row,center,center);
+      border:1rpx solid rgba(191, 191, 191, 1);
+      border-radius: 10rpx;
+      height: 60rpx;
+      line-height: 60rpx;
+      text-align: center;
+      width: 150rpx;
+      overflow: hidden;
+      float:left;
+      margin:0 20rpx 30rpx 0;
+      box-sizing:border-box;
+      font-size: 30rpx;
+    }
+    .cityItem:active{
+      background: #F8F8F8;
+    }
+    .cityItem:nth-child(4n){
+      margin: 0 0 30rpx 0;
+    }
+    .locationIcon{
+      height: 30rpx;
+      width: 30rpx;
+    }
+    .cityList{
+      margin: 30rpx 0 0 20rpx;
+    }
+  }
+</style>
+<template>
+  <view class="cityPage">
+    <view class="searchView">
+      <view class="backView">
+        <view class="icon_left"></view>
+      </view>
+      <view class="searchIconView"><image class="searchIcon" src="../images/search.png"></image></view>
+      <input class="inputView" placeholder="请选择城市" placeholder-class="placeholder"/>
+      <view class="backView"></view>
+    </view>
+    <view>
+      <view class="title">定位城市</view>
+      <view class="cityList">
+        <view class="cityItem"><image class="locationIcon" src="../images/location-red.png"></image><text>上海市</text></view>
+      </view>
+    </view>
+    <view>
+      <view class="title">热门城市</view>
+      <view class="cityList">
+        <view class="cityItem">上海市</view>
+        <view class="cityItem">杭州市</view>
+        <view class="cityItem">杭州市</view>
+        <view class="cityItem">杭州市</view>
+        <view class="cityItem">杭州市</view>
+        <view class="cityItem">杭州市</view>
+      </view>
+    </view>
+    <view class="slider-nav">
+      <view class="eachindex" bindtap="scrollTop">定</view>
+      <view class="eachindex" bindtap="scrollHot">热</view>
+        <view data-item="{{item}}" bindtap="scrollChar" wx:for="{{chars}}" wx:key="unique" class="eachindex" bindtouchstart="onLetterStart" bindtouchmove="onLetterMove" data-index="{{index}}" bindtouchend="onLetterEnd">{{item}}</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class City extends wepy.page {
+    config = {
+      navigationBarTitleText: '选择城市'
+    }
+    components = {
+    }
+
+    data = {
+      chars:[],
+      city:[]
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+      scrollTop(e){
+        console.log(e);
+      },
+      scrollHot(e){
+        console.log(e);
+      },
+      scrollChar(e){
+        console.log(e);
+      }
+    }
+
+    events = {
+    }
+
+    onLoad() {
+      if(!wx.getStorageSync('city')){
+        this.getCity();
+      }
+      this.city = wx.getStorageSync('city')
+      this.chars = this.genEn();
+      let arr = ['张三','李四','王五']
+      arr.sort((a, b) => a.localeCompare(b, 'zh-Hans-CN', {sensitivity: 'accent'}))
+      console.log(arr);
+    }
+    getCity() {
+      let key = 'GAPBZ-HSCCO-YMGWE-S32ZJ-URPBH-BRFPY';
+      wx.fetch({
+        url: 'http://apis.map.qq.com/ws/district/v1/list?key='+key
+      }).then((res) => {
+        let citySource = res.data.result[1]
+        let city = []
+        citySource.forEach((item)=>{
+          city.push(item.fullname)
+        })
+        city.sort((a, b) => a.localeCompare(b, 'zh-Hans-CN', {sensitivity: 'accent'}))
+        //console.log(city);
+        wx.setStorageSync('city',city)
+      })
+    }
+    genEn(){
+      let arr = [];
+      for(let i = 65; i < 91; i++){
+        arr.push(String.fromCharCode(i));
+      }
+      return arr;
+    }
+  }
+</script>

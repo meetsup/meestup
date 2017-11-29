@@ -24,7 +24,8 @@
         'pages/myActivity',
         'pages/myHistory',
         'pages/search',
-        'pages/aboutus'
+        'pages/aboutus',
+        'pages/city'
       ],
       window: {
         backgroundTextStyle: 'light',

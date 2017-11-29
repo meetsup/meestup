@@ -29,7 +29,7 @@
       border-top-width: 0;
       border-right-width: 0;
     }
-    .inputView{
+    .inputView {
       flex-grow: 1;
       height: 50rpx;
       background-color: #F2F2F2;
@@ -77,14 +77,16 @@
 <template>
   <view class="indexPage">
     <view class="indexHeader">
-      <text class="city">上海市</text>
+      <text class="city" catchtap="toCity">上海市</text>
       <view class="icon_up"></view>
       <!--<input class="search" maxlength="10" placeholder="" />-->
       <view class="inputView" catchtap="toSearch">
         <image class="searchIcon" src="../images/search.png"></image>
         <text class="searchText">请输入进行搜索</text>
       </view>
-      <image class="message" src="../images/message_64.png"></image>
+      <view catchtap="toMessage">
+        <image class="message" src="../images/message_64.png" ></image>
+      </view>
     </view>
     <view>
       <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}"
@@ -159,6 +161,16 @@ export default class Index extends wepy.page {
     toSearch(e){
       wx.navigateTo({
         url: 'search'
+      })
+    },
+    toMessage(e){
+      wx.switchTab({
+        url: 'message'
+      })
+    },
+    toCity(){
+      wx.navigateTo({
+        url: 'city'
       })
     }
   }

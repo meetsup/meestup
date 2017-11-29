@@ -182,11 +182,11 @@
       <view class="newItemContainer">
         <view class="newItem">
           <view class="nowrap newItemTitle">时间</view>
-          <picker mode="date" value="2016-09-01" start="2015-09-01" end="2017-09-01" bindchange="startTimeChange">
+          <picker mode="date" value="2016-09-01" start="2015-09-01" end="2100-09-01" bindchange="startTimeChange">
             <view class="newItemTime">{{startTime||'开始时间'}}</view>
           </picker>
           <view class="nowrap zhi">至</view>
-          <picker mode="date" value="2016-09-01" start="2015-09-01" end="2017-09-01" bindchange="endTimeChange">
+          <picker mode="date" value="2016-09-01" start="2015-09-01" end="2100-09-01" bindchange="endTimeChange">
             <view class="newItemTime">{{endTime||'结束时间'}}</view>
           </picker>
         </view>
@@ -204,7 +204,7 @@
       <view class="newItemContainer">
         <view class="newItem">
           <view class="nowrap newItemTitle">活动地点</view>
-          <input class="newItemInput" placeholder="请输入活动地点" catchtap="addressInput"/>
+          <input class="newItemInput" placeholder="请输入活动地点" bindinput="addressInput"/>
         </view>
       </view>
       <view class="newItemContainer marginTop" hover-class="newItemContainerHover">
@@ -348,11 +348,12 @@
           let speed = res.speed
           let accuracy = res.accuracy
           console.log(latitude,longitude,speed,accuracy)
-          let key = 'GAPBZ-HSCCO-YMGWE-S32ZJ-URPBH-BRFPY';
-          let requestUrl = 'http://apis.map.qq.com/ws/geocoder/v1/?location='+latitude+','+longitude+'&coord_type=1&key='+key
+          //let key = 'GAPBZ-HSCCO-YMGWE-S32ZJ-URPBH-BRFPY';
+          //let requestUrl = 'http://apis.map.qq.com/ws/geocoder/v1/?location='+latitude+','+longitude+'&coord_type=1&key='+key
           wx.fetch({
-            url: requestUrl
+            url: wx.baseUrl + 'laiba/map/location?lat='+latitude+'&lng='+longitude
           }).then((res) => {
+            console.log(res);
             let address = res.data.result.address;
             self.address = address;
             self.$apply();
@@ -366,6 +367,7 @@
     }
     createActivity(option){
       let openId = wx.getStorageSync('key')
+      console.log(option);
       let requestData = {
         'activityname':option.title,
         'detail':option.detail,
@@ -386,7 +388,10 @@
         url: wx.baseUrl + 'laiba/homepage/create'
       }).then((res) => {
         let resData = res.data.jsonData;
-        console.log(resData);
+        let status = res.status;
+        if(status-0 === 0){
+
+        }
       })
     }
     uploadImage(filePath){
