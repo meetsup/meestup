@@ -2,7 +2,8 @@
   @redColor:#a2313e;
   @grayColor:#F2F2F2;
   page{
-
+    overflow-y: hidden;
+    height:100%;
   }
   .flexSetting(@direction:row, @alignItem:center, @justify: flex-start) {
     display: flex;
@@ -11,15 +12,16 @@
     justify-content: @justify;
   }
   .cityPage{
-    .flexSetting(column,stretch);
-    width: 100%;
+    overflow:hidden;
+    height:100%;
+    .wrapper{
+      height: 100%;
+      position: relative;
+    }
     .searchView{
       .flexSetting();
-      /*position: fixed;*/
-      /*top: 0;*/
-      /*left: 0;*/
-      /*right: 0;*/
       padding-bottom: 20rpx;
+      //border-bottom:1rpx solid rgba(191, 191, 191, 1);
     }
     .searchIcon{
       height: 45rpx;
@@ -60,7 +62,9 @@
       background-color: @grayColor;
       font-size: 26rpx;
       color: #707070;
-      padding: 10rpx 20rpx;
+      padding:0 0 0 30rpx;
+      height:50rpx;
+      line-height:50rpx;
     }
     .slider-nav {
       overflow-y: hidden;
@@ -70,7 +74,7 @@
       right: 0;
       bottom: 0;
       z-index: 999;
-      color: #999999;
+      color: @redColor;
       display: -webkit-box;
       display: -webkit-flex;
       display: flex;
@@ -96,10 +100,10 @@
       text-align: center;
       width: 150rpx;
       overflow: hidden;
-      float:left;
       margin:0 20rpx 30rpx 0;
       box-sizing:border-box;
       font-size: 30rpx;
+      display: inline-block;
     }
     .cityItem:active{
       background: #F8F8F8;
@@ -113,40 +117,56 @@
     }
     .cityList{
       margin: 30rpx 0 0 20rpx;
+      display: block;
+      position: relative;
+    }
+    .cityLi{
+      margin:0 0 0 30rpx;
+      height: 98rpx;
+      line-height: 98rpx;
+      border-bottom: 1px solid #d9d9d9;
+      font-size: 32rpx;
+    }
+    .cityLi:active{
+      background: #F8F8F8;
+      margin: 0;
+      padding-left: 30rpx;
+    }
+    .cityLi:last-child{
+      border:0;
     }
   }
 </style>
 <template>
   <view class="cityPage">
     <view class="searchView">
-      <view class="backView">
+      <view class="backView" catchtap="backToHome">
         <view class="icon_left"></view>
       </view>
       <view class="searchIconView"><image class="searchIcon" src="../images/search.png"></image></view>
       <input class="inputView" placeholder="请选择城市" placeholder-class="placeholder"/>
       <view class="backView"></view>
     </view>
-    <view>
-      <view class="title">定位城市</view>
+    <scroll-view class="wrapper" scroll-y="{{scrollY}}" scroll-into-view="{{toView}}" enable-back-to-top="{{backTop}}" bindscroll="onScroll">
+      <view class="title" id="top">{{topName}}</view>
       <view class="cityList">
         <view class="cityItem"><image class="locationIcon" src="../images/location-red.png"></image><text>上海市</text></view>
       </view>
-    </view>
-    <view>
-      <view class="title">热门城市</view>
+      <view class="title" id="hot">热门城市</view>
       <view class="cityList">
-        <view class="cityItem">上海市</view>
-        <view class="cityItem">杭州市</view>
-        <view class="cityItem">杭州市</view>
-        <view class="cityItem">杭州市</view>
-        <view class="cityItem">杭州市</view>
-        <view class="cityItem">杭州市</view>
+        <repeat for="{{popularCity}}" key="index" index="index" item="item">
+          <view class="cityItem">{{item}}</view>
+        </repeat>
       </view>
-    </view>
+      <view class="list" wx:for="{{chars}}" wx:key="{{index}}" wx:for-item="charItem">
+        <view class="title" id="{{charItem}}">{{charItem}}</view>
+        <view class="cityLi" data-item="{{item}}" wx:for="{{city[charItem]}}" wx:key="unique" catchtap="clickLocation" >{{item.fullname}}</view>
+      </view>
+    </scroll-view>
     <view class="slider-nav">
-      <view class="eachindex" bindtap="scrollTop">定</view>
-      <view class="eachindex" bindtap="scrollHot">热</view>
-        <view data-item="{{item}}" bindtap="scrollChar" wx:for="{{chars}}" wx:key="unique" class="eachindex" bindtouchstart="onLetterStart" bindtouchmove="onLetterMove" data-index="{{index}}" bindtouchend="onLetterEnd">{{item}}</view>
+      <view class="eachindex" data-letter="top" bindtap="scrollTop">定</view>
+      <view class="eachindex" data-letter="hot" bindtap="scrollHot">热</view>
+        <view data-letter="{{item}}" bindtap="scrollChar" wx:for="{{chars}}" wx:key="unique" class="eachindex" bindtouchstart="onLetterStart" bindtouchmove="onLetterMove" data-index="{{index}}" bindtouchend="onLetterEnd">{{item}}</view>
     </view>
   </view>
 </template>
@@ -163,7 +183,12 @@
 
     data = {
       chars:[],
-      city:[]
+      city:[],
+      popularCity:[],
+      toView:'',
+      scrollY:true,
+      topName:'定位城市',
+      backTop: true
     }
 
     computed = {
@@ -171,14 +196,42 @@
     }
 
     methods = {
-      scrollTop(e){
-        console.log(e);
+      scrollTop(){
+        this.toView = 'top';
+        this.topName = '定位城市';
       },
-      scrollHot(e){
-        console.log(e);
+      scrollHot(){
+        this.toView = 'hot';
+        this.topName = '热门城市';
       },
       scrollChar(e){
-        console.log(e);
+        let letter = e.currentTarget.dataset.letter;
+        this.toView = letter;
+      },
+      clickLocation(e){
+        let currentCity = e.currentTarget.dataset.item;
+        let cityName = currentCity.fullname;
+        wx.setStorageSync('currentCity',currentCity);
+        wx.navigateBack();
+      },
+      onScroll(e){
+        //console.log(e.detail.scrollTop);
+      },
+      onLetterStart(e) {
+        /*console.log('start',e);
+        const letter = e.currentTarget.dataset.letter;
+        this.toView = letter;*/
+      },
+      onLetterMove(e) {
+        /*console.log('move',e);
+        const letter = e.currentTarget.dataset.letter;
+        this.toView = letter;*/
+      },
+      onLetterEnd(e) {
+        //console.log('end',e);
+      },
+      backToHome(){
+        wx.navigateBack()
       }
     }
 
@@ -186,28 +239,35 @@
     }
 
     onLoad() {
+      this.popularCity = ['上海市','杭州市','深圳市','北京市','天津市','重庆市']
       if(!wx.getStorageSync('city')){
         this.getCity();
       }
-      this.city = wx.getStorageSync('city')
-      this.chars = this.genEn();
-      let arr = ['张三','李四','王五']
-      arr.sort((a, b) => a.localeCompare(b, 'zh-Hans-CN', {sensitivity: 'accent'}))
-      console.log(arr);
+      this.city = wx.getStorageSync('city');
+      this.chars = Object.keys(this.city);
     }
     getCity() {
       let key = 'GAPBZ-HSCCO-YMGWE-S32ZJ-URPBH-BRFPY';
       wx.fetch({
         url: 'http://apis.map.qq.com/ws/district/v1/list?key='+key
       }).then((res) => {
-        let citySource = res.data.result[1]
-        let city = []
+        let citySource = res.data.result[1];
+        let cityByChar = {};
+        citySource.sort((obj1,obj2) => {
+          if(obj1.pinyin[0] !== obj2.pinyin[0]){
+            return obj1.pinyin[0].localeCompare(obj2.pinyin[0],'zh-Hans-CN', {sensitivity: 'accent'})
+          }else{
+            return obj1.pinyin[1].localeCompare(obj2.pinyin[1],'zh-Hans-CN', {sensitivity: 'accent'})
+          }
+        });
         citySource.forEach((item)=>{
-          city.push(item.fullname)
-        })
-        city.sort((a, b) => a.localeCompare(b, 'zh-Hans-CN', {sensitivity: 'accent'}))
-        //console.log(city);
-        wx.setStorageSync('city',city)
+          let firstLetter = item.pinyin[0].split('')[0].toUpperCase();
+          if(!cityByChar[firstLetter]){
+            cityByChar[firstLetter] = [];
+          }
+          cityByChar[firstLetter].push(item)
+        });
+        wx.setStorageSync('city',cityByChar);
       })
     }
     genEn(){

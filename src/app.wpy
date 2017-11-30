@@ -75,6 +75,7 @@
     }
 
     onLaunch() {
+      this.getLocation();
     }
 
     onShow() {
@@ -156,6 +157,29 @@
               })
             }
           })
+        }
+      })
+    }
+
+    /**
+     * 获取当前位置
+     */
+    getLocation(){
+      wx.getLocation({
+        type: 'wgs84',
+        success(res) {
+          let latitude = res.latitude
+          let longitude = res.longitude
+          wx.fetch({
+            url: wx.baseUrl + 'laiba/map/location?lat='+latitude+'&lng='+longitude
+          }).then((res) => {
+            let address = res.data.result.address;
+            console.log(res.data.result);
+            wx.setStorageSync('address',address);
+          })
+        },
+        fail(error){
+          console.log(error);
         }
       })
     }

@@ -153,7 +153,6 @@ export default class Index extends wepy.page {
     },
     toDetail(e){
       let id = e.currentTarget.dataset.id;
-      console.log('to detail',e,id);
       wx.navigateTo({
         url: 'activityDetail?id='+id
       })
@@ -210,7 +209,6 @@ export default class Index extends wepy.page {
     }).then((res) => {
       let resData = res.data.jsonData;
       resData.forEach((item)=>{
-        console.log('item:',item);
         this.activityList.push({
           id:item.activityid,
           title:item.activityname,
@@ -221,7 +219,6 @@ export default class Index extends wepy.page {
           imgSrc:item.uploadpictures||wx.imgUrl
         })
       })
-      console.log(resData);
       this.$apply();
     })
   }
@@ -241,7 +238,6 @@ export default class Index extends wepy.page {
       url: wx.baseUrl + 'laiba/homepage/search'
     }).then((res) => {
       let resData = res.data.jsonData;
-      console.log(resData);
     })
   }
   /**
@@ -519,20 +515,9 @@ export default class Index extends wepy.page {
   }
 
   onLoad() {
-    /*this.getHomePageDetail();
-    this.homepageListActivity();
-    this.homepageSearch();
-    this.typeAll();
-    this.loginSaveMessage();
-    this.myActivity();
-    this.myMessage();
-    this.myChange();*/
-    //this.myChange();
-    //this.myHistory();
     let openId = wx.getStorageSync('key')
     this.homepageListActivity(openId)
     this.homepageSearch(openId,'吃饭');
-    this.myHistory(openId)
   }
 }
 </script>
