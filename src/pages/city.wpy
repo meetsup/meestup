@@ -135,6 +135,30 @@
     .cityLi:last-child{
       border:0;
     }
+    .dn{
+      display: none;
+    }
+    .searchList{
+      border-top: 1px solid #d9d9d9;
+    }
+    .searchCityLi{
+      margin:0 0 0 30rpx;
+      height: 98rpx;
+      line-height: 98rpx;
+      border-bottom: 1px solid #d9d9d9;
+      font-size: 32rpx;
+    }
+    .searchCityLi:active{
+      background: #F8F8F8;
+      margin: 0;
+      padding-left: 30rpx;
+    }
+    .noData{
+      .flexSetting(row,center,center);
+      font-size: 30rpx;
+      color:#707070;
+      margin-top: 150rpx;
+    }
   }
 </style>
 <template>
@@ -144,10 +168,18 @@
         <view class="icon_left"></view>
       </view>
       <view class="searchIconView"><image class="searchIcon" src="../images/search.png"></image></view>
-      <input class="inputView" placeholder="请选择城市" placeholder-class="placeholder"/>
+      <input class="inputView" placeholder="请选择城市" placeholder-class="placeholder" bindinput="searchCity"/>
       <view class="backView"></view>
     </view>
-    <scroll-view class="wrapper" scroll-y="{{scrollY}}" scroll-into-view="{{toView}}" enable-back-to-top="{{backTop}}" bindscroll="onScroll">
+    <view class="searchList {{searchString.length>0?'':'dn'}}">
+      <block wx:if="{{searchCityList.length>0}}">
+        <view wx:for="{{searchCityList}}" wx:key="{{index}}" wx:for-item="item" class="searchCityLi" data-item="{{item}}" catchtap="clickLocation" >{{item.fullname}}</view>
+      </block>
+      <block wx:else>
+        <view class="noData">暂无数据</view>
+      </block>
+    </view>
+    <scroll-view class="wrapper {{searchString.length<=0?'':'dn'}}" scroll-y="{{scrollY}}" scroll-into-view="{{toView}}" enable-back-to-top="{{backTop}}" bindscroll="onScroll">
       <view class="title" id="top">{{topName}}</view>
       <view class="cityList">
         <view class="cityItem"><image class="locationIcon" src="../images/location-red.png"></image><text>上海市</text></view>
@@ -163,10 +195,10 @@
         <view class="cityLi" data-item="{{item}}" wx:for="{{city[charItem]}}" wx:key="unique" catchtap="clickLocation" >{{item.fullname}}</view>
       </view>
     </scroll-view>
-    <view class="slider-nav">
+    <view class="slider-nav {{searchString.length<=0?'':'dn'}}">
       <view class="eachindex" data-letter="top" bindtap="scrollTop">定</view>
       <view class="eachindex" data-letter="hot" bindtap="scrollHot">热</view>
-        <view data-letter="{{item}}" bindtap="scrollChar" wx:for="{{chars}}" wx:key="unique" class="eachindex" bindtouchstart="onLetterStart" bindtouchmove="onLetterMove" data-index="{{index}}" bindtouchend="onLetterEnd">{{item}}</view>
+      <view data-letter="{{item}}" bindtap="scrollChar" wx:for="{{chars}}" wx:key="unique" class="eachindex" bindtouchstart="onLetterStart" bindtouchmove="onLetterMove" data-index="{{index}}" bindtouchend="onLetterEnd">{{item}}</view>
     </view>
   </view>
 </template>
@@ -183,12 +215,15 @@
 
     data = {
       chars:[],
-      city:[],
+      city:{},
       popularCity:[],
       toView:'',
       scrollY:true,
       topName:'定位城市',
-      backTop: true
+      backTop: true,
+      searchString:'',
+      searchCityList:[],
+      citySource:[],
     }
 
     computed = {
@@ -232,6 +267,18 @@
       },
       backToHome(){
         wx.navigateBack()
+      },
+      searchCity(e){
+        let inputValue = e.detail.value;
+        this.searchString = inputValue;
+        if(this.searchString.length>0){
+          console.log(this.citySource);
+          this.searchCityList = this.citySource.filter((item) => {
+            return item.fullname.indexOf(inputValue) >= 0
+          })
+          console.log(this.searchCityList);
+          //this.mapSearch(this.searchString)
+        }
       }
     }
 
@@ -244,12 +291,16 @@
         this.getCity();
       }
       this.city = wx.getStorageSync('city');
+      this.citySource = wx.getStorageSync('citySource');
       this.chars = Object.keys(this.city);
     }
+
+    /**
+     * 获取全部行政区域
+     */
     getCity() {
-      let key = 'GAPBZ-HSCCO-YMGWE-S32ZJ-URPBH-BRFPY';
       wx.fetch({
-        url: 'http://apis.map.qq.com/ws/district/v1/list?key='+key
+        url: wx.baseUrl + 'laiba/map/listDistrict'
       }).then((res) => {
         let citySource = res.data.result[1];
         let cityByChar = {};
@@ -260,6 +311,7 @@
             return obj1.pinyin[1].localeCompare(obj2.pinyin[1],'zh-Hans-CN', {sensitivity: 'accent'})
           }
         });
+        wx.setStorageSync('citySource',citySource);
         citySource.forEach((item)=>{
           let firstLetter = item.pinyin[0].split('')[0].toUpperCase();
           if(!cityByChar[firstLetter]){
@@ -276,6 +328,15 @@
         arr.push(String.fromCharCode(i));
       }
       return arr;
+    }
+    mapSearch(city){
+      wx.fetch({
+        url: wx.baseUrl + 'laiba/map/search?keyword='+city
+      }).then((res) => {
+        console.log(res);
+        let citySource = res.data.result[0];
+        console.log(citySource);
+      })
     }
   }
 </script>

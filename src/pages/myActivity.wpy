@@ -59,7 +59,7 @@
       <!--全部列表-->
       <swiper-item style="height: 100%;position: absolute;">
         <scroll-view style="height: 100%;" scroll-y="{{true}}">
-          <repeat for="{{activityList}}" key="index" index="index" item="item">
+          <repeat for="{{activityAll}}" key="index" index="index" item="item">
             <view catchtap="toDetail">
               <activityItem :listData.sync="item"></activityItem>
             </view>
@@ -69,9 +69,9 @@
       <!--我参与的列表-->
       <swiper-item style="height: 100%;position: absolute;">
         <scroll-view style="height: 100%" scroll-y="{{true}}">
-          <repeat for="{{temp}}" key="index" index="index" item="item">
-            <view catchtap="toDetail">
-              <activityItem :listData.sync="listData"></activityItem>
+          <repeat for="{{activityJoin}}" key="index" index="index" item="item">
+            <view catchtap="toDetail" data-id="{{item.id}}">
+              <activityItem :listData.sync="item"></activityItem>
             </view>
           </repeat>
         </scroll-view>
@@ -79,9 +79,11 @@
       <!--我发起的列表-->
       <swiper-item style="height: 100%;position: absolute;">
         <scroll-view style="height: 100%" scroll-y="{{true}}">
-          <view catchtap="toDetail">
-            <activityItem :listData.sync="listData"></activityItem>
-          </view>
+          <repeat for="{{activityCreate}}" key="index" index="index" item="item">
+            <view catchtap="toDetail" data-id="{{item.id}}">
+              <activityItem :listData.sync="item"></activityItem>
+            </view>
+          </repeat>
         </scroll-view>
       </swiper-item>
     </swiper>
@@ -102,18 +104,11 @@
 
     data = {
       true:true,
-      temp:[1,1,1,1,1,1,1,1,1,1,1,1,1],
       tabs:['全部','我参与的','我发起的'],
       currentPage:0,
-      activityList:[],
-      listData:{
-        title:'途虎前端大会，有你不了解的前端知识！',
-        time:'2017-10-22 ~ 2017-10-24',
-        location:'上海闵行',
-        browser:'11',
-        money:'免费',
-        imgSrc:'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
-      }
+      activityAll:[],
+      activityJoin: [],
+      activityCreate: []
     }
 
     computed = {
@@ -123,8 +118,11 @@
       chooseTab(index){
         this.currentPage = index
       },
-      toDetail(){
-        console.log('detail');
+      toDetail(e){
+        let id = e.currentTarget.dataset.id;
+        wx.navigateTo({
+          url: 'activityDetail?id='+id
+        })
       },
       tabChange(e){
         this.currentPage = e.detail.current;
@@ -135,7 +133,9 @@
     }
 
     onLoad() {
-      this.myActivity(wx.getStorageSync('key'));
+      this.myActivityAll(wx.getStorageSync('key'));
+      this.myActivityJoin(wx.getStorageSync('key'));
+      this.myActivityCreate(wx.getStorageSync('key'));
     }
     /**
      * 我的--我参加的活动
@@ -151,19 +151,82 @@
       }).then((res) => {
         let resData = res.data.jsonData;
         resData.forEach((item)=>{
-          console.log('item:',item);
-          this.activityList.push({
-            title:item.activityname,
-            time:item.starttime.split(' ')[0],
-            location:item.activityplace||'暂无',
-            browser:item.browsecount||'0',
-            money:item.isfree||'免费',
-            imgSrc:item.uploadpictures||wx.imgUrl
-          })
-        })
-        console.log(resData);
+          this.activityList.push(this.handleActivity(item))
+        });
         this.$apply();
       })
+    }
+    /**
+     * 我的活动--全部
+     * */
+    myActivityAll(openId){
+      let requestData = {
+        'openId':openId
+      }
+      wx.fetch({
+        data: requestData,
+        method:'POST',
+        url: wx.baseUrl + 'laiba/my/historyAll'
+      }).then((res) => {
+        let resData = res.data.jsonData;
+        resData.forEach((item)=>{
+          this.activityAll.push(this.handleActivity(item))
+        });
+        this.$apply();
+      })
+    }
+    /**
+     * 我的活动--我参与的
+     * */
+    myActivityJoin(openId){
+      let requestData = {
+        'openId':openId
+      }
+      wx.fetch({
+        data: requestData,
+        method:'POST',
+        url: wx.baseUrl + 'laiba/my/myJoin'
+      }).then((res) => {
+        let resData = res.data.jsonData;
+        resData.forEach((item)=>{
+          this.activityJoin.push(this.handleActivity(item))
+        });
+        this.$apply();
+      })
+    }
+    /**
+     * 我的活动--我发起的
+     * */
+    myActivityCreate(openId){
+      let requestData = {
+        'openId':openId
+      }
+      wx.fetch({
+        data: requestData,
+        method:'POST',
+        url: wx.baseUrl + 'laiba/my/myCreate'
+      }).then((res) => {
+        let resData = res.data.jsonData;
+        resData.forEach((item)=>{
+          this.activityCreate.push(this.handleActivity(item))
+        });
+        this.$apply();
+      })
+    }
+
+    /**
+     * 处理活动数据
+     */
+    handleActivity(activity){
+      return {
+        id:activity.activityid,
+        title:activity.activityname,
+        time:activity.starttime.split(' ')[0],
+        location:activity.activityplace||'暂无',
+        browser:activity.browsecount||'0',
+        money:activity.isfree||'免费',
+        imgSrc:activity.uploadpictures||wx.imgUrl
+      }
     }
   }
 </script>
