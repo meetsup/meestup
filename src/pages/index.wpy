@@ -18,6 +18,11 @@
     }
     .city{
       font-size: 28rpx;
+      max-width: 150rpx;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      word-break:keep-all;
+      overflow:hidden;
     }
     .icon_up {
       margin: -12rpx 15rpx 0 15rpx;
@@ -77,7 +82,7 @@
 <template>
   <view class="indexPage">
     <view class="indexHeader">
-      <text class="city" catchtap="toCity">上海市</text>
+      <text class="city" catchtap="toCity">{{cityName}}</text>
       <view class="icon_up"></view>
       <!--<input class="search" maxlength="10" placeholder="" />-->
       <view class="inputView" catchtap="toSearch">
@@ -101,9 +106,7 @@
     <view class="indexBody">
       <view class="bodyTitle"><view class="titleIcon"></view><text>热门推荐</text></view>
       <repeat for="{{activityList}}" key="index" index="index" item="item">
-        <view catchtap="toDetail" data-id="{{item.id}}">
-          <activityItem :listData.sync="item"></activityItem>
-        </view>
+        <activityItem :listData.sync="item"></activityItem>
       </repeat>
     </view>
   </view>
@@ -112,6 +115,7 @@
 <script>
 import wepy from 'wepy'
 import activityItem from '../components/activityItem'
+import WNC from '../modules/WxNotificationCenter';
 
 export default class Index extends wepy.page {
   config = {
@@ -141,7 +145,8 @@ export default class Index extends wepy.page {
       browser:'11',
       money:'免费',
       imgSrc:'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg'
-    }
+    },
+    cityName:'定位中...'
   }
 
   computed = {
@@ -150,12 +155,6 @@ export default class Index extends wepy.page {
   methods = {
     imageTap(e){
       console.log(e);
-    },
-    toDetail(e){
-      let id = e.currentTarget.dataset.id;
-      wx.navigateTo({
-        url: 'activityDetail?id='+id
-      })
     },
     toSearch(e){
       wx.navigateTo({
@@ -514,10 +513,16 @@ export default class Index extends wepy.page {
     })
   }
 
+  chooseCity(data) {
+    this.observer.cityName = data.cityName
+  }
+
   onLoad() {
-    let openId = wx.getStorageSync('key')
-    this.homepageListActivity(openId)
+    let openId = wx.getStorageSync('key');
+    this.cityName = wx.getStorageSync('locationData').address_component.city || '定位中...'
+    this.homepageListActivity(openId);
     this.homepageSearch(openId,'吃饭');
+    WNC.addNotification('chooseCity', this.chooseCity, this);
   }
 }
 </script>

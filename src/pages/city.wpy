@@ -182,17 +182,17 @@
     <scroll-view class="wrapper {{searchString.length<=0?'':'dn'}}" scroll-y="{{scrollY}}" scroll-into-view="{{toView}}" enable-back-to-top="{{backTop}}" bindscroll="onScroll">
       <view class="title" id="top">{{topName}}</view>
       <view class="cityList">
-        <view class="cityItem"><image class="locationIcon" src="../images/location-red.png"></image><text>上海市</text></view>
+        <view class="cityItem" data-item="{{locationCity}}" catchtap="clickLocation"><image class="locationIcon" src="../images/location-red.png"></image><text>{{locationCity}}</text></view>
       </view>
       <view class="title" id="hot">热门城市</view>
       <view class="cityList">
         <repeat for="{{popularCity}}" key="index" index="index" item="item">
-          <view class="cityItem">{{item}}</view>
+          <view class="cityItem" data-item="{{item}}" catchtap="clickLocation">{{item}}</view>
         </repeat>
       </view>
       <view class="list" wx:for="{{chars}}" wx:key="{{index}}" wx:for-item="charItem">
         <view class="title" id="{{charItem}}">{{charItem}}</view>
-        <view class="cityLi" data-item="{{item}}" wx:for="{{city[charItem]}}" wx:key="unique" catchtap="clickLocation" >{{item.fullname}}</view>
+        <view class="cityLi" data-item="{{item}}" wx:for="{{city[charItem]}}" wx:key="unique" catchtap="clickLocation">{{item.fullname}}</view>
       </view>
     </scroll-view>
     <view class="slider-nav {{searchString.length<=0?'':'dn'}}">
@@ -205,7 +205,7 @@
 
 <script>
   import wepy from 'wepy'
-
+  import WNC from '../modules/WxNotificationCenter';
   export default class City extends wepy.page {
     config = {
       navigationBarTitleText: '选择城市'
@@ -224,6 +224,7 @@
       searchString:'',
       searchCityList:[],
       citySource:[],
+      locationCity:'定位中...'
     }
 
     computed = {
@@ -245,9 +246,18 @@
       },
       clickLocation(e){
         let currentCity = e.currentTarget.dataset.item;
-        let cityName = currentCity.fullname;
-        wx.setStorageSync('currentCity',currentCity);
-        wx.navigateBack();
+        let cityName = currentCity.fullname||currentCity;
+        wx.showModal({
+          title: '温馨提醒',
+          content: `确定更换城市为${cityName}吗？`,
+          success: function(res) {
+            if (res.confirm) {
+              WNC.postNotificationName('chooseCity',{'cityName':cityName});
+              wx.navigateBack();
+              wx.setStorageSync('currentCity',currentCity);
+            }
+          }
+        })
       },
       onScroll(e){
         //console.log(e.detail.scrollTop);
@@ -286,6 +296,7 @@
     }
 
     onLoad() {
+      this.locationCity = wx.getStorageSync('locationData').address_component.city;
       this.popularCity = ['上海市','杭州市','深圳市','北京市','天津市','重庆市']
       if(!wx.getStorageSync('city')){
         this.getCity();

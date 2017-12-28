@@ -176,6 +176,7 @@
             let address = res.data.result.address;
             console.log(res.data.result);
             wx.setStorageSync('address',address);
+            wx.setStorageSync('locationData',res.data.result)
           })
         },
         fail(error){

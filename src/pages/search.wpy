@@ -92,12 +92,31 @@
     .indexBody{
       height: 500rpx;
     }
+
+    .icon_left {
+      margin: 0 0 0 15rpx;
+      width: 28rpx;
+      height: 28rpx;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      border: 1rpx solid #c7c7cc;
+      border-bottom-width: 0;
+      border-right-width: 0;
+    }
+    .backView{
+      width: 90rpx;
+      height: 60rpx;
+      .flexSetting(row,center,center);
+    }
   }
 </style>
 <template>
   <view class="searchPage">
     <view class="indexHeader">
-      <image class="backIcon" src="../images/back-gray.png" catchtap="goBack"></image>
+      <view class="backView" catchtap="goBack">
+        <view class="icon_left"></view>
+      </view>
+      <!--<image class="backIcon" src="../images/back-gray.png" catchtap="goBack"></image>-->
       <view class="inputView">
         <image class="searchIcon" src="../images/search.png"></image>
         <input placeholder="来吧，搜索你想要了解的活动" placeholder-class="placeholderClass" auto-focus class="inputClass" bindinput="onInput"/>

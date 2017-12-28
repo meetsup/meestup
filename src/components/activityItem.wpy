@@ -72,7 +72,7 @@
   }
 </style>
 <template>
-  <view class="listItemComponent" hover-class="listItemHover">
+  <view class="listItemComponent" hover-class="listItemHover" data-id="{{listData.id}}" catchtap="toDetail">
     <image class="listItemImg" src="{{listData.imgSrc}}" mode="aspectFill"></image>
     <view class="listItemContent">
       <view class="title">
@@ -113,7 +113,14 @@
     }
     events = {}
     watch = {}
-    methods = {}
+    methods = {
+      toDetail(e){
+        let id = e.currentTarget.dataset.id;
+        wx.navigateTo({
+          url: 'activityDetail?id='+id
+        })
+      }
+    }
     onLoad() {
     }
   }
