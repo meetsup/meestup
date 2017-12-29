@@ -60,9 +60,7 @@
       <swiper-item style="height: 100%;position: absolute;">
         <scroll-view style="height: 100%;" scroll-y="{{true}}">
           <repeat for="{{activityAll}}" key="index" index="index" item="item">
-            <view catchtap="toDetail">
-              <activityItem :listData.sync="item"></activityItem>
-            </view>
+            <activityItem :listData.sync="item"></activityItem>
           </repeat>
         </scroll-view>
       </swiper-item>
@@ -70,9 +68,7 @@
       <swiper-item style="height: 100%;position: absolute;">
         <scroll-view style="height: 100%" scroll-y="{{true}}">
           <repeat for="{{activityJoin}}" key="index" index="index" item="item">
-            <view catchtap="toDetail" data-id="{{item.id}}">
-              <activityItem :listData.sync="item"></activityItem>
-            </view>
+            <activityItem :listData.sync="item"></activityItem>
           </repeat>
         </scroll-view>
       </swiper-item>
@@ -80,9 +76,7 @@
       <swiper-item style="height: 100%;position: absolute;">
         <scroll-view style="height: 100%" scroll-y="{{true}}">
           <repeat for="{{activityCreate}}" key="index" index="index" item="item">
-            <view catchtap="toDetail" data-id="{{item.id}}">
-              <activityItem :listData.sync="item"></activityItem>
-            </view>
+            <activityItem :listData.sync="item"></activityItem>
           </repeat>
         </scroll-view>
       </swiper-item>
@@ -117,12 +111,6 @@
     methods = {
       chooseTab(index){
         this.currentPage = index
-      },
-      toDetail(e){
-        let id = e.currentTarget.dataset.id;
-        wx.navigateTo({
-          url: 'activityDetail?id='+id
-        })
       },
       tabChange(e){
         this.currentPage = e.detail.current;

@@ -14,9 +14,7 @@
 <template>
   <view class="myHistoryPage">
     <repeat for="{{activityList}}" key="index" index="index" item="item">
-      <view catchtap="toDetail" data-id="{{item.id}}">
-        <activityItem :listData.sync="item"></activityItem>
-      </view>
+      <activityItem :listData.sync="item"></activityItem>
     </repeat>
   </view>
 </template>
@@ -41,13 +39,6 @@
     }
 
     methods = {
-      toDetail(e){
-        let id = e.currentTarget.dataset.id;
-        console.log('to detail',e,id);
-        wx.navigateTo({
-          url: 'activityDetail?id='+id
-        })
-      }
     }
 
     events = {

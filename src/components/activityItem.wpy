@@ -89,7 +89,7 @@
         </view>
         <view class="browserMoney">
           <view class="browserNumber"><image class="eye" src="../images/eye-gray.png"></image><text>{{listData.browser}}</text></view>
-          <text>{{listData.money}}</text>
+          <text>{{listData.money === 'Y' ? '免费':listData.money}}</text>
         </view>
       </view>
     </view>

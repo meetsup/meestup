@@ -519,7 +519,7 @@ export default class Index extends wepy.page {
 
   onLoad() {
     let openId = wx.getStorageSync('key');
-    this.cityName = wx.getStorageSync('locationData').address_component.city || '定位中...'
+    this.cityName = wx.getStorageSync('locationData') ? wx.getStorageSync('locationData').address_component.city : '定位中...';
     this.homepageListActivity(openId);
     this.homepageSearch(openId,'吃饭');
     WNC.addNotification('chooseCity', this.chooseCity, this);

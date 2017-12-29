@@ -127,9 +127,7 @@
     <view class="indexBody">
       <block wx:if="{{activityList.length>0}}">
         <repeat for="{{activityList}}" key="index" index="index" item="item">
-          <view catchtap="toDetail" data-id="{{item.id}}">
-            <activityItem :listData.sync="item"></activityItem>
-          </view>
+          <activityItem :listData.sync="item"></activityItem>
         </repeat>
       </block>
       <block wx:else>
